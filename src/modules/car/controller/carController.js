@@ -19,5 +19,6 @@ module.exports = class CarController extends AbstractController {
 
   index(req, res) {
     res.render('car/views/index.html');
+    this.carService.getAll();
   }
 };

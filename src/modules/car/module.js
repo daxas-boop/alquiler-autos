@@ -1,6 +1,6 @@
-const CarController = require('./carController/carController');
-const CarService = require('./carService/carService');
-const CarRepository = require('./carRepository/sqlite/carRepository');
+const CarController = require('./controller/carController');
+const CarService = require('./service/carService');
+const CarRepository = require('./repository/sqlite/carRepository');
 
 /**
  *
