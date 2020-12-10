@@ -1,4 +1,63 @@
 {% extends 'views/layout/base.html' %}
 
 {% block body %}
+  <a href="/cars/create" class="button is-primary">Agrega un auto</a>
+
+  {% for message in messages %}
+    <div class="notification is-primary">
+      {{message}}
+    </div>
+  {% endfor %}
+
+  {% for error in errors %}
+    <div class="notification is-danger">
+      {{error.message}}
+    </div>
+    <div class="notification is-danger is-light">
+      {{error.stack}}
+    </div>
+  {% endfor %}
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Año</th>
+        <th>Kilometros</th>
+        <th>Color</th>
+        <th>Aire</th>
+        <th>Pasajeros</th>
+        <th>Transmision</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for car in data.cars %}
+      <tr>
+      <th><img class="image is-128x128" src={{car.imagen}}></th>
+      <td>{{car.marca}}</td>
+      <td>{{car.modelo}}</td>
+      <td>{{car.año}}</td>
+      <td>{{car.kilometros}}</td>
+      <td>{{car.color}}</td>
+      <td>
+        {% if car.aire === 'true' %}
+          Si
+        {% else %}
+          No
+        {% endif %}
+      </td>
+      <td>{{car.pasajeros}}</td>
+      <td>{{car.transmision}}</td>
+      <td>
+        <a href="/cars/edit/{{car.id}}" class="button is-primary">Editar</a>
+        <a class="button is-danger">Eliminar</a>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
 {% endblock %}

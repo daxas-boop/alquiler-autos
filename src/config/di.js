@@ -25,7 +25,7 @@ function configureMulter() {
       cb(null, process.env.UPLOAD_IMG_DIR);
     },
     filename(req, file, cb) {
-      cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+      cb(null, Date.now() + path.extname(file.originalname));
     },
   });
 
@@ -33,7 +33,7 @@ function configureMulter() {
 }
 
 function configureSqlite3() {
-  return new Sqlite3Database();
+  return new Sqlite3Database(process.env.DATABASE_PATH);
 }
 
 function addCommonDefinitions(container) {
@@ -46,7 +46,7 @@ function addCommonDefinitions(container) {
 
 function addCarModuleDefinitions(container) {
   container.addDefinitions({
-    CarController: object(CarController).construct(get('CarService', 'Multer')),
+    CarController: object(CarController).construct(get('CarService'), get('Multer')),
     CarService: object(CarService).construct(get('CarRepository')),
     CarRepository: object(CarRepository).construct(get('DatabaseAdapter')),
   });

@@ -1,0 +1,121 @@
+{% extends 'views/layout/base.html' %}
+
+{% block body %}
+  {% if data.car %}
+    <h2 class="title has-text-centered">Edita el auto {{data.car.modelo}}</h2>
+  {% else %}
+    <h2 class="title has-text-centered">Crea un nuevo auto</h2>
+  {% endif %}
+  <form class="mt-5" action="/cars/save" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{data.car.id}}" >
+
+    <div class="field">
+      <label class="label">Marca</label>
+      <div class="field-body">
+        <div class="field">
+          <input class="input" name="marca" type="text" placeholder="Marca" value="{{data.car.marca}}" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="modelo" class="label">Modelo</label>
+      <p class="control has-icons-left">
+        <input class="input" name="modelo" type="text" placeholder="Modelo" value="{{data.car.modelo}}" required>
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+
+    <div class="field">
+      <label for="año" class="label">Año</label>
+      <p class="control has-icons-left">
+        <input class="input" name="año" type="number" placeholder="Año" value="{{data.car.año}}" required>
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+
+    <div class="field">
+      <label for="kilometros" class="label">Kilometros</label>
+      <p class="control has-icons-left">
+        <input class="input" name="kilometros" type="number" placeholder="Kilometros" value="{{data.car.kilometros}}" min="0" required>
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+
+    <div class="field">
+      <label for="color" class="label">Color</label>
+      <p class="control has-icons-left">
+        <input class="input" name="color" type="text" placeholder="Color" value="{{data.car.color}}" required>
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+
+    <div class="field">
+      <label for="aire" class="label">Aire Acondicionado</label>
+      <div class="control">
+        <label class="radio">
+          <input type="radio" name="aire" value="true" checked >
+          Si
+        </label>
+        <label class="radio">
+          <input type="radio" name="aire" value="false">
+          No
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="pasajeros" class="label">Pasajeros</label>
+      <div class="control">
+        <div class="select">
+          <select name="pasajeros">
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="transmision" class="label">Transmision</label>
+      <div class="control">
+        <label class="radio">
+          <input type="radio" name="transmision" value="automatica" checked>
+          Automatica
+        </label>
+        <label class="radio">
+          <input type="radio" name="transmision" value="manual">
+          Manual
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="imagen" class="label">Imagen del auto</label>
+      <div class="control">
+        <input name="imagen" type="file" class="input">
+      </div>
+    </div>
+
+    <div class="field  is-grouped is-grouped-centered">
+      <p class="control">
+        <button class="button is-success my-4">
+          Guardar
+        </button>
+      </p>
+    </div>
+
+  </form>
+{% endblock %}
