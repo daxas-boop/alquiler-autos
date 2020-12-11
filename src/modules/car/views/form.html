@@ -1,0 +1,157 @@
+{% extends 'views/layout/base.html' %}
+
+{% block body %}
+
+  {% if data.car %}
+    <h2 class="title has-text-centered">Edita el auto {{data.car.marca}} {{data.car.modelo}}</h2>
+  {% else %}
+    <h2 class="title has-text-centered">Crea un nuevo auto</h2>
+  {% endif %}
+
+  <form class="mt-5" action="/cars/save" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{data.car.id}}" >
+
+    <div class="field">
+      <label class="label">Marca</label>
+      <div class="field-body">
+        <div class="field">
+          <input class="input" name="marca" type="text" placeholder="Marca" value="{{data.car.marca}}" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="modelo" class="label">Modelo</label>
+      <p class="control has-icons-left">
+        <input class="input" name="modelo" type="text" placeholder="Modelo" value="{{data.car.modelo}}" required>
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+
+    <div class="field">
+      <label for="año" class="label">Año</label>
+      <p class="control has-icons-left">
+        <input class="input" name="año" type="number" placeholder="Año" value="{{data.car.año}}" required>
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+
+    <div class="field">
+      <label for="kilometros" class="label">Kilometros</label>
+      <p class="control has-icons-left">
+        <input class="input" name="kilometros" type="number" placeholder="Kilometros" value="{{data.car.kilometros}}" min="0" required>
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+
+    <div class="field">
+      <label for="color" class="label">Color</label>
+      <p class="control has-icons-left">
+        <input class="input" name="color" type="text" placeholder="Color" value="{{data.car.color}}" required>
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+    </div>
+
+    <div class="field">
+      <label for="aire" class="label">Aire Acondicionado</label>
+      <div class="control">
+        <label class="radio">
+          {% if data.car.aire %}
+            <input type="radio" name="aire" value="1" checked>
+          {% else %}
+            <input type="radio" name="aire" value="1">
+          {% endif %}
+          Si
+        </label>
+        <label class="radio">
+          {% if data.car.aire %}
+            <input type="radio" name="aire" value="0">
+          {% else %}
+            <input type="radio" name="aire" value="0" checked>
+          {% endif %}
+          No
+        </label>
+        
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="pasajeros" class="label">Pasajeros</label>
+      <div class="control">
+        <div class="select">
+          <select name="pasajeros" required>
+            {% if data.car.pasajeros === '1' %}
+            <option value="1" selected>1</option>
+            {% else %}
+            <option value="1" >1</option>
+            {% endif %}
+
+            {% if data.car.pasajeros === '2' %}
+            <option value="2" selected>2</option>
+            {% else %}
+            <option value="2">2</option>
+            {% endif %}
+
+            {% if data.car.pasajeros === '3' %}
+            <option value="3" selected>3</option>
+            {% else %}
+            <option value="3" >3</option>
+            {% endif %}
+
+            {% if data.car.pasajeros === '4' %}
+            <option value="4" selected>4</option>
+            {% else %}
+            <option value="4" >4</option>
+            {% endif %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="transmision" class="label">Transmision</label>
+      <div class="control">
+        <label class="radio">
+          {% if data.car.transmision === 'automatica' %}
+          <input type="radio" name="transmision" value="automatica" checked>
+          {% else %}
+          <input type="radio" name="transmision" value="automatica">
+          {% endif %}
+          Automatica
+        </label>
+        <label class="radio">
+          {% if data.car.transmision === 'manual' %}
+          <input type="radio" name="transmision" value="manual" checked>
+          {% else %}
+          <input type="radio" name="transmision" value="manual" >
+          {% endif %}
+          Manual
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="imagen" class="label">Imagen del auto</label>
+      <div class="control">
+        <input name="imagen" type="file" class="input">
+      </div>
+    </div>
+
+    <div class="field  is-grouped is-grouped-centered">
+      <p class="control">
+        <button class="button is-success my-4">
+          Guardar
+        </button>
+      </p>
+    </div>
+
+  </form>
+{% endblock %}

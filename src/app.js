@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 
 const app = express();
@@ -10,14 +11,19 @@ nunjucks.configure('src/modules', {
   express: app,
 });
 
+app.use(express.urlencoded({ extended: true }));
+app.use('/public', express.static('public'));
+
 const container = dependecyInjectionConfig();
+app.use(container.get('Session'));
 initCarModule(container, app);
 
 const CarController = container.get('CarController');
 app.get('/', CarController.index.bind(CarController));
 
-const PUERTO = 8080;
+const PUERTO = process.env.PORT || 8080;
 
 app.listen(PUERTO, () => {
+  // eslint-disable-next-line no-console
   console.log(`App listening at http://localhost:${PUERTO}`);
 });
