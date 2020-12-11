@@ -1,63 +1,101 @@
 {% extends 'views/layout/base.html' %}
 
 {% block body %}
-  <a href="/cars/create" class="button is-primary">Agrega un auto</a>
+  <a href="/cars/create" class="button is-primary my-5">Agrega un auto</a>
 
   {% for message in messages %}
-    <div class="notification is-primary">
+    <div class="notification is-primary is-light my-3">
       {{message}}
     </div>
   {% endfor %}
 
   {% for error in errors %}
-    <div class="notification is-danger">
-      {{error.message}}
-    </div>
     <div class="notification is-danger is-light">
-      {{error.stack}}
+      {{error}}
     </div>
   {% endfor %}
 
-  <table class="table">
+  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
     <thead>
       <tr>
-        <th>Imagen</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Año</th>
-        <th>Kilometros</th>
-        <th>Color</th>
-        <th>Aire</th>
-        <th>Pasajeros</th>
-        <th>Transmision</th>
-        <th>Acciones</th>
+        <th class="has-text-centered">Imagen</th>
+        <th class="has-text-centered">Marca</th>
+        <th class="has-text-centered">Modelo</th>
+        <th class="has-text-centered">Año</th>
+        <th class="has-text-centered">Kilometros</th>
+        <th class="has-text-centered">Color</th>
+        <th class="has-text-centered">Aire</th>
+        <th class="has-text-centered">Pasajeros</th>
+        <th class="has-text-centered">Transmision</th>
+        <th class="has-text-centered">Acciones</th>
       </tr>
     </thead>
     <tbody>
     {% for car in data.cars %}
       <tr>
-      <th><img class="image is-128x128" src={{car.imagen}}></th>
-      <td>{{car.marca}}</td>
-      <td>{{car.modelo}}</td>
-      <td>{{car.año}}</td>
-      <td>{{car.kilometros}}</td>
-      <td>{{car.color}}</td>
-      <td>
-        {% if car.aire === 'true' %}
-          Si
-        {% else %}
-          No
-        {% endif %}
-      </td>
-      <td>{{car.pasajeros}}</td>
-      <td>{{car.transmision}}</td>
-      <td>
-        <a href="/cars/edit/{{car.id}}" class="button is-primary">Editar</a>
-        <a class="button is-danger">Eliminar</a>
-      </td>
-    </tr>
+        <th class="has-text-centered">
+          <span class="buttons is-centered">
+            <figure class="image is-128x128">
+              <img class="is-rounded mt-5" src={{car.imagen}}>
+            </figure>
+          </span>
+        </th>
+        <td class="has-text-centered">
+          <span class="my-6 tag is-size-6">
+            {{car.marca}}
+          </span>
+        </td>
+        <td class="has-text-centered">
+          <span class="my-6 tag is-size-6">
+            {{car.modelo}}
+          </span>
+        </td>
+        <td class="has-text-centered">
+          <span class="my-6 tag is-size-6">
+            {{car.año}}
+          </span>
+        </td>
+        <td class="has-text-centered">
+          <span class="my-6 tag is-size-6">
+            {{car.kilometros}}
+          </span>
+        </td>
+        <td class="has-text-centered">
+          <span class="my-6 tag is-size-6">
+            {{car.color}}
+          </span>
+        </td>
+        <td class="has-text-centered">
+           <span class="my-6 tag is-size-6">
+          {% if car.aire %}
+            Si
+          {% else %}
+            No
+          {% endif %}
+          </span>
+        </td>
+        <td class="has-text-centered">
+          <span class="my-6 tag is-size-6">
+            {{car.pasajeros}}
+          </span>
+        </td>
+        <td class="has-text-centered">
+          <span class="my-6 tag is-size-6">
+            {{car.transmision}}
+          </span>
+        </td>
+        <td class="has-text-centered">
+          <span class="buttons is-centered my-6">
+            <a href="/cars/edit/{{car.id}}" class="button is-primary mx-2">Editar</a>
+            <a data-id={{car.id}} data-marca={{car.marca}} data-modelo={{car.modelo}} id="delete-btn" class="button is-danger">Eliminar</a>
+          </span>
+        </td>
+      </tr>
     {% endfor %}
     </tbody>
-    </table>
+  </table>
+  <div id="prompt-container"></div>
+
+  <script src="./public/js/prompt.js"></script>
 
 {% endblock %}

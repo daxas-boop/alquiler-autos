@@ -52,6 +52,7 @@ module.exports = class CarController extends AbstractController {
       res.render('car/views/form.html', { data: { car } });
     } catch (e) {
       req.session.errors = [e.message, e.stack];
+      res.redirect('/cars');
     }
   }
 
@@ -83,7 +84,21 @@ module.exports = class CarController extends AbstractController {
     }
   }
 
-  delete(req, res) {
-
+  /**
+   *
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
+  async delete(req, res) {
+    try {
+      const { id } = req.params;
+      const car = await this.carService.getById(id);
+      this.carService.delete(car);
+      req.session.messages = [`Se eliminó el auto con id ${car.id}, marca ${car.marca} y modelo ${car.modelo}`];
+      res.redirect('/cars');
+    } catch (e) {
+      req.errors = [e.message, e.stack];
+      res.redirect('/cars');
+    }
   }
 };

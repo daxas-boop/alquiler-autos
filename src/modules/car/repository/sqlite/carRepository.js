@@ -119,4 +119,18 @@ module.exports = class CarRepository extends AbstractCarRepository {
 
     return this.getById(id);
   }
+
+  /**
+   *
+   * @param {import('../../entity/car')} car
+   */
+  delete(car) {
+    if (!car || !car.id) {
+      throw new CarNotFoundError('El ID del club no está definido');
+    }
+    const statement = this.databaseAdapter.prepare(`
+    DELETE FROM cars WHERE id = ? `);
+    statement.run(car.id);
+    return true;
+  }
 };

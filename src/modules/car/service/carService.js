@@ -33,4 +33,12 @@ module.exports = class CarService {
 
     return this.carRepository.save(car);
   }
+
+  delete(car) {
+    if (!(car instanceof Car)) {
+      throw new CarNotFoundError();
+    }
+
+    return this.carRepository.delete(car);
+  }
 };
