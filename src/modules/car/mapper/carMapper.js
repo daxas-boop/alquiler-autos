@@ -1,29 +1,7 @@
 const Car = require('../entity/car');
 
-function fromDbToEntity({
-  id,
-  marca,
-  modelo,
-  año,
-  kilometros,
-  color,
-  aire,
-  pasajeros,
-  transmision,
-  imagen,
-}) {
-  return new Car({
-    id,
-    marca,
-    modelo,
-    año,
-    kilometros,
-    color,
-    aire,
-    pasajeros,
-    transmision,
-    imagen,
-  });
+function fromModelToEntity(model) {
+  return new Car(model.toJSON());
 }
 
 function fromDataToEntity({
@@ -36,6 +14,7 @@ function fromDataToEntity({
   aire,
   pasajeros,
   transmision,
+  precio,
   imagen,
 }) {
   return new Car({
@@ -48,11 +27,12 @@ function fromDataToEntity({
     aire,
     pasajeros,
     transmision,
+    precio,
     imagen,
   });
 }
 
 module.exports = {
-  fromDbToEntity,
+  fromModelToEntity,
   fromDataToEntity,
 };

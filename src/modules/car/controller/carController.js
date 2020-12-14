@@ -73,9 +73,9 @@ module.exports = class CarController extends AbstractController {
       const savedCar = await this.carService.save(car);
 
       if (car.id) {
-        req.session.messages = [`El auto con ID ${car.id} y modelo ${car.modelo} se actualizó`];
+        req.session.messages = [`El auto con ID ${car.id} y marca ${car.marca} se actualizó`];
       } else {
-        req.session.messages = [`Se creó un auto con ID ${savedCar.id} y modelo ${savedCar.id}`];
+        req.session.messages = [`Se creó un auto con ID ${savedCar.id} y marca ${savedCar.marca}`];
       }
       res.redirect('/cars');
     } catch (e) {

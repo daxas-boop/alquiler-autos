@@ -1,15 +1,53 @@
 const {
   default: DIContainer, object, factory, get,
 } = require('rsdi');
-const Sqlite3Database = require('better-sqlite3');
 const session = require('express-session');
 const multer = require('multer');
 const path = require('path');
-const { CarController, CarService, CarRepository } = require('../modules/car/module');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const { Sequelize } = require('sequelize');
+const {
+  CarController, CarService, CarRepository, CarModel,
+} = require('../modules/car/module');
 
-function configureSession() {
+function configureSequelize() {
+  const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: process.env.DB_PATH,
+  });
+
+  return sequelize;
+}
+
+/**
+ * @param {DIContainer} container
+ */
+function configureSequelizeSession() {
+  const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: process.env.SESSION_DB_PATH,
+  });
+
+  return sequelize;
+}
+
+/**
+ * @param {DIContainer} container
+ */
+function configureCarModel(container) {
+  CarModel.setup(container.get('Sequelize'));
+  return CarModel;
+}
+
+/**
+ * @param {DIContainer} container
+ */
+function configureSession(container) {
   const ONE_WEEK_IN_SECONDS = 604800;
+
+  const sequelize = container.get('SessionSequelize');
   const options = {
+    store: new SequelizeStore({ db: sequelize }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
@@ -32,15 +70,12 @@ function configureMulter() {
   return multer({ storage });
 }
 
-function configureSqlite3() {
-  return new Sqlite3Database(process.env.DATABASE_PATH);
-}
-
 function addCommonDefinitions(container) {
   container.addDefinitions({
+    SessionSequelize: factory(configureSequelizeSession),
     Session: factory(configureSession),
     Multer: factory(configureMulter),
-    DatabaseAdapter: factory(configureSqlite3),
+    Sequelize: factory(configureSequelize),
   });
 }
 
@@ -48,7 +83,8 @@ function addCarModuleDefinitions(container) {
   container.addDefinitions({
     CarController: object(CarController).construct(get('CarService'), get('Multer')),
     CarService: object(CarService).construct(get('CarRepository')),
-    CarRepository: object(CarRepository).construct(get('DatabaseAdapter')),
+    CarRepository: object(CarRepository).construct(get('CarModel')),
+    CarModel: factory(configureCarModel),
   });
 }
 

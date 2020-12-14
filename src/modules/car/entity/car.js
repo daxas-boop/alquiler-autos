@@ -9,6 +9,7 @@ module.exports = class Car {
     aire,
     pasajeros,
     transmision,
+    precio,
     imagen,
   }) {
     this.id = id;
@@ -20,6 +21,7 @@ module.exports = class Car {
     this.aire = aire;
     this.pasajeros = pasajeros;
     this.transmision = transmision;
+    this.precio = precio;
     this.imagen = imagen;
   }
 };
