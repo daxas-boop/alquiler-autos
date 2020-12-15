@@ -20,7 +20,7 @@ module.exports = class CarController extends AbstractController {
     app.get(`${ROUTE}/create`, this.create.bind(this));
     app.get(`${ROUTE}/edit/:id`, this.edit.bind(this));
     app.get(`${ROUTE}/delete/:id`, this.delete.bind(this));
-    app.post(`${ROUTE}/save`, this.uploadMiddleware.single('imagen'), this.save.bind(this));
+    app.post(`${ROUTE}/save`, this.uploadMiddleware.single('image'), this.save.bind(this));
   }
 
   /**
@@ -67,15 +67,15 @@ module.exports = class CarController extends AbstractController {
 
       if (req.file) {
         const { path } = req.file;
-        car.imagen = path;
+        car.image = path;
       }
 
       const savedCar = await this.carService.save(car);
 
       if (car.id) {
-        req.session.messages = [`El auto con ID ${car.id} y marca ${car.marca} se actualizó`];
+        req.session.messages = [`El auto con ID ${car.id} y marca ${car.brand} se actualizó`];
       } else {
-        req.session.messages = [`Se creó un auto con ID ${savedCar.id} y marca ${savedCar.marca}`];
+        req.session.messages = [`Se creó un auto con ID ${savedCar.id} y marca ${savedCar.brand}`];
       }
       res.redirect('/cars');
     } catch (e) {
@@ -93,8 +93,8 @@ module.exports = class CarController extends AbstractController {
     try {
       const { id } = req.params;
       const car = await this.carService.getById(id);
-      this.carService.delete(car);
-      req.session.messages = [`Se eliminó el auto con id ${car.id}, marca ${car.marca} y modelo ${car.modelo}`];
+      await this.carService.delete(car);
+      req.session.messages = [`Se eliminó el auto con id ${car.id}, marca ${car.brand} y modelo ${car.model}`];
       res.redirect('/cars');
     } catch (e) {
       req.errors = [e.message, e.stack];

@@ -11,19 +11,19 @@ module.exports = class CarModel extends Model {
           autoIncrement: true,
           unique: true,
         },
-        marca: {
+        brand: {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        modelo: {
+        model: {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        año: {
+        year: {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
-        kilometros: {
+        mileage: {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
@@ -31,23 +31,23 @@ module.exports = class CarModel extends Model {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        aire: {
+        airConditioning: {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
-        pasajeros: {
+        passengers: {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
-        transmision: {
+        transmission: {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        precio: {
+        priceDay: {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
-        imagen: {
+        image: {
           type: DataTypes.TEXT,
           allowNull: false,
         },
@@ -55,8 +55,6 @@ module.exports = class CarModel extends Model {
       {
         sequelize: sequelizeInstance,
         modelName: 'Car',
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
       },
     );
     return CarModel;

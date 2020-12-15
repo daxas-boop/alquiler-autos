@@ -35,18 +35,18 @@ module.exports = class CarRepository extends AbstractCarRepository {
       modelCar = await this.CarModel.create(car);
     }
 
-    return modelCar;
+    return fromModelToEntity(modelCar);
   }
 
   /**
    *
    * @param {import('../../entity/car')} car
    */
-  delete(car) {
+  async delete(car) {
     if (!car || !car.id) {
       throw new CarNotFoundError('El ID del club no está definido');
     }
-    const savedCar = this.CarModel.findByPk(car.id);
-    savedCar.destroy();
+
+    return Boolean(await this.CarModel.destroy({ where: { id: car.id } }));
   }
 };

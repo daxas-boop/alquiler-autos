@@ -1,27 +1,27 @@
 module.exports = class Car {
   constructor({
     id,
-    marca,
-    modelo,
-    año,
-    kilometros,
+    brand,
+    model,
+    year,
+    mileage,
     color,
-    aire,
-    pasajeros,
-    transmision,
-    precio,
-    imagen,
+    airConditioning,
+    passengers,
+    transmission,
+    priceDay,
+    image,
   }) {
     this.id = id;
-    this.marca = marca;
-    this.modelo = modelo;
-    this.año = año;
-    this.kilometros = kilometros;
+    this.brand = brand;
+    this.model = model;
+    this.year = year;
+    this.mileage = mileage;
     this.color = color;
-    this.aire = aire;
-    this.pasajeros = pasajeros;
-    this.transmision = transmision;
-    this.precio = precio;
-    this.imagen = imagen;
+    this.airConditioning = airConditioning;
+    this.passengers = passengers;
+    this.transmission = transmission;
+    this.priceDay = priceDay;
+    this.image = image;
   }
 };

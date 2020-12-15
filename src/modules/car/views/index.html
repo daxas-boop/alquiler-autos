@@ -1,6 +1,8 @@
 {% extends 'views/layout/base.html' %}
 
 {% block body %}
+  <h2 class="title has-text-centered mt-3">Administrá los autos</h2>
+
   <a href="/cars/create" class="button is-primary my-5">Agrega un auto</a>
 
   {% for message in messages %}
@@ -14,8 +16,9 @@
       {{error}}
     </div>
   {% endfor %}
+  
   <div class="table-container">
-    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+    <table class="table is-striped is-narrow is-hoverable is-fullwidth">
       <thead>
         <tr>
           <th class="has-text-centered">Imagen</th>
@@ -37,28 +40,28 @@
           <th class="has-text-centered">
             <span class="buttons is-centered">
               <figure class="image is-128x128">
-                <img class="is-rounded mt-5" src="/{{car.imagen}}" >
+                <img class="image is-128x128 my-1" src="/{{car.image}}" >
               </figure>
             </span>
           </th>
           <td class="has-text-centered">
             <span class="my-6 tag is-size-6">
-              {{car.marca}}
+              {{car.brand}}
             </span>
           </td>
           <td class="has-text-centered">
             <span class="my-6 tag is-size-6">
-              {{car.modelo}}
+              {{car.model}}
             </span>
           </td>
           <td class="has-text-centered">
             <span class="my-6 tag is-size-6">
-              {{car.año}}
+              {{car.year}}
             </span>
           </td>
           <td class="has-text-centered">
             <span class="my-6 tag is-size-6">
-              {{car.kilometros}}
+              {{car.mileage}}
             </span>
           </td>
           <td class="has-text-centered">
@@ -68,7 +71,7 @@
           </td>
           <td class="has-text-centered">
             <span class="my-6 tag is-size-6">
-            {% if car.aire %}
+            {% if car.airConditioning %}
               Si
             {% else %}
               No
@@ -77,23 +80,23 @@
           </td>
           <td class="has-text-centered">
             <span class="my-6 tag is-size-6">
-              {{car.pasajeros}}
+              {{car.passengers}}
             </span>
           </td>
           <td class="has-text-centered">
             <span class="my-6 tag is-size-6">
-              {{car.transmision}}
+              {{car.transmission}}
             </span>
           </td>
           <td class="has-text-centered">
             <span class="my-6 tag is-size-6">
-              {{car.precio}} $
+              {{car.priceDay}} $
             </span>
           </td>
           <td>
             <span class="is-flex my-6">
               <a href="/cars/edit/{{car.id}}" class="button is-primary mx-2">Editar</a>
-              <a data-id={{car.id}} data-marca={{car.marca}} data-modelo={{car.modelo}} id="delete-btn" class="button is-danger">Eliminar</a>
+              <a data-id={{car.id}} data-brand={{car.brand}} data-model={{car.model}} id="delete-btn" class="button is-danger">Eliminar</a>
             </span>
           </td>
         </tr>
@@ -103,6 +106,6 @@
   </div>
   <div id="prompt-container"></div>
 
-  <script src="./public/js/prompt.js"></script>
+  <script src="./public/js/prompt-delete-car.js"></script>
 
 {% endblock %}
