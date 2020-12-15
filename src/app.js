@@ -5,6 +5,7 @@ const app = express();
 const nunjucks = require('nunjucks');
 const dependecyInjectionConfig = require('./config/di');
 const { init: initCarModule } = require('./modules/car/module');
+const { init: initClientModule } = require('./modules/client/module');
 
 nunjucks.configure('src/modules', {
   autoescape: true,
@@ -16,7 +17,9 @@ app.use('/public', express.static('public'));
 
 const container = dependecyInjectionConfig();
 app.use(container.get('Session'));
+
 initCarModule(container, app);
+initClientModule(container, app);
 
 const CarController = container.get('CarController');
 app.get('/', CarController.index.bind(CarController));

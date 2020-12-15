@@ -3,7 +3,7 @@ function deletePrompt() {
   $promptContainer.innerHTML = '';
 }
 
-function generatePrompt(id, marca, modelo) {
+function generatePrompt(id, brand, model) {
   const $promptContainer = document.querySelector('#prompt-container');
   const $modal = document.createElement('div');
   $modal.id = 'prompt';
@@ -16,7 +16,7 @@ function generatePrompt(id, marca, modelo) {
   $modalHeader.className = 'modal-card-head';
   const $modalTitle = document.createElement('p');
   $modalTitle.className = 'modal-card-title has-text-centered';
-  $modalTitle.innerText = `Eliminar auto ${marca} ${modelo}`;
+  $modalTitle.innerText = `Eliminar auto ${brand} ${model}`;
   const $modalBody = document.createElement('section');
   $modalBody.className = 'modal-card-body has-text-centered';
   $modalBody.innerText = 'Si eliminas el auto se borrará para siempre.';
@@ -49,10 +49,10 @@ function handleDeleteButtonClick() {
   const $deleteBtns = document.querySelectorAll('#delete-btn');
 
   $deleteBtns.forEach(($deleteBtn) => {
-    const { id, marca, modelo } = $deleteBtn.dataset;
+    const { id, brand, model } = $deleteBtn.dataset;
 
     $deleteBtn.addEventListener('click', () => {
-      generatePrompt(id, marca, modelo);
+      generatePrompt(id, brand, model);
     });
   });
 }

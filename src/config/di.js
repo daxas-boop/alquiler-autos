@@ -7,6 +7,9 @@ const path = require('path');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const { Sequelize } = require('sequelize');
 const {
+  ClientController, ClientService, ClientRepository, ClientModel,
+} = require('../modules/client/module');
+const {
   CarController, CarService, CarRepository, CarModel,
 } = require('../modules/car/module');
 
@@ -37,6 +40,14 @@ function configureSequelizeSession() {
 function configureCarModel(container) {
   CarModel.setup(container.get('Sequelize'));
   return CarModel;
+}
+
+/**
+ * @param {DIContainer} container
+ */
+function configureClientModel(container) {
+  ClientModel.setup(container.get('Sequelize'));
+  return ClientModel;
 }
 
 /**
@@ -88,10 +99,19 @@ function addCarModuleDefinitions(container) {
   });
 }
 
+function addClientModuleDefinitions(container) {
+  container.addDefinitions({
+    ClientController: object(ClientController).construct(get('ClientService')),
+    ClientService: object(ClientService).construct(get('ClientRepository')),
+    ClientRepository: object(ClientRepository).construct(get('ClientModel')),
+    ClientModel: factory(configureClientModel),
+  });
+}
+
 module.exports = function configureDI() {
   const container = new DIContainer();
   addCommonDefinitions(container);
   addCarModuleDefinitions(container);
-
+  addClientModuleDefinitions(container);
   return container;
 };
