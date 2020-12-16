@@ -3,7 +3,7 @@
 {% block body %}
 
   <h2 class="title has-text-centered mt-3">Administrá los usuarios</h2>
-  <a href="/users/create" class="button is-primary my-5">Agrega un usuario</a>
+  <a href="/users/create" class="button is-primary my-5">Agregá un usuario</a>
 
   {% for message in messages %}
     <div class="notification is-primary is-light my-3">
@@ -19,7 +19,7 @@
 
 
   <div class="table-container">
-    <table class="table is-hoverable is-fullwidth">
+    <table class="table is-striped is-narrow is-hoverable">
       <thead>
         <tr>
           <th class="has-text-centered">Nombre</th>
@@ -84,7 +84,7 @@
             </td>
             <td>
               <span class="is-flex my-6">
-                <a href="/users/edit/{{user.id}}" class="button is-primary mx-2">Editar</a>
+                <a href="/users/edit/{{user.id}}" class="button is-primary mx-1">Editar</a>
                 <a data-id={{user.id}} data-name={{user.name}} data-surname={{user.surname}} id="delete-btn" class="button is-danger">Eliminar</a>
               </span>
             </td>

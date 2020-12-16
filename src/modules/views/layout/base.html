@@ -10,29 +10,23 @@
 </head>
 <body>
 
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <div class="navbar-item">
-        <p class="title">Alquier de Autos</p>
-      </div>
-    </div>
+  <nav class="navbar is-link" role="navigation" aria-label="main navigation">
 
-    <div class="navbar-menu">
-      <div class="navbar-start">
-        <a href="/" class="navbar-item">
-          Home
-        </a>
+    <div class="navbar-brand">
         <a href="/cars" class="navbar-item">
-          Autos
+          Gestionar autos
         </a>
         <a href="/users" class="navbar-item">
-          Usuarios
+          Gestiona usuarios
         </a>
-      </div>
+        <a href="/rents" class="navbar-item">
+          Gestiona alquileres
+        </a>
     </div>
+
   </nav>
 
-  <div class="container">
+  <div class="container is-fullhd">
   {% block body %}
   {% endblock %}
   </div>
