@@ -2,76 +2,76 @@
 
 {% block body %}
 
-{% if data.client %}
-    <h2 class="title has-text-centered">Edita el cliente {{data.client.name}} {{data.client.surname}}</h2>
+{% if data.user %}
+    <h2 class="title has-text-centered">Edita el usuario {{data.user.name}} {{data.user.surname}}</h2>
   {% else %}
-    <h2 class="title has-text-centered">Agregá un nuevo cliente</h2>
+    <h2 class="title has-text-centered">Agregá un nuevo usuario</h2>
   {% endif %}
 
-  <form class="mt-5" action="/clients/save" method="POST" enctype="application/x-www-form-urlencoded">
-    <input type="hidden" name="id" value="{{data.client.id}}" >
+  <form class="mt-5" action="/users/save" method="POST" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" name="id" value="{{data.user.id}}" >
 
     <div class="field">
       <label for="name" class="label">Nombre</label>
       <div class="control has-icons-left">
-        <input class="input" name="name" type="text" placeholder="Nombre" value="{{data.client.name}}" required>
+        <input class="input" name="name" type="text" placeholder="Nombre" value="{{data.user.name}}" required>
       </div>
     </div>
 
     <div class="field">
       <label for="surname" class="label">Apellido</label>
       <p class="control has-icons-left">
-        <input class="input" name="surname" type="text" placeholder="Apellido" value="{{data.client.surname}}" required>
+        <input class="input" name="surname" type="text" placeholder="Apellido" value="{{data.user.surname}}" required>
       </p>
     </div>
 
     <div class="field">
       <label for="document_type" class="label">Tipo Documento</label>
       <p class="control has-icons-left">
-        <input class="input" name="document_type" type="text" placeholder="Tipo Documento" value="{{data.client.documentType}}" required>
+        <input class="input" name="document_type" type="text" placeholder="Tipo Documento" value="{{data.user.documentType}}" required>
       </p>
     </div>
 
     <div class="field">
       <label for="document_number" class="label">Numero Documento</label>
       <p class="control has-icons-left">
-        <input class="input" name="document_number" type="number" placeholder="Numero Documento" value="{{data.client.documentNumber}}" min="0" required>
+        <input class="input" name="document_number" type="number" placeholder="Numero Documento" value="{{data.user.documentNumber}}" min="0" required>
       </p>
     </div>
 
     <div class="field">
       <label for="nationality" class="label">Nacionalidad</label>
       <p class="control has-icons-left">
-        <input class="input" name="nationality" type="text" placeholder="Nacionalidad" value="{{data.client.nationality}}" required>
+        <input class="input" name="nationality" type="text" placeholder="Nacionalidad" value="{{data.user.nationality}}" required>
       </p>
     </div>
 
     <div class="field">
       <label for="address" class="label">Dirección</label>
       <p class="control has-icons-left">
-        <input class="input" name="address" type="text" placeholder="Direccion" value="{{data.client.address}}" required>
+        <input class="input" name="address" type="text" placeholder="Direccion" value="{{data.user.address}}" required>
       </p>
     </div>
 
     <div class="field">
       <label for="phone" class="label">Telefono</label>
       <p class="control has-icons-left">
-        <input class="input" name="phone" type="text" placeholder="Telefono" value="{{data.client.phone}}" required>
+        <input class="input" name="phone" type="text" placeholder="Telefono" value="{{data.user.phone}}" required>
       </p>
     </div>
 
     <div class="field">
       <label for="email" class="label">E-mail</label>
       <p class="control has-icons-left">
-        <input class="input" name="email" type="email" placeholder="E-mail" value="{{data.client.email}}" required>
+        <input class="input" name="email" type="email" placeholder="E-mail" value="{{data.user.email}}" required>
       </p>
     </div>
 
     <div class="field">
       <label for="birthdate" class="label">Nacimiento</label>
       <p class="control has-icons-left">
-        {% if data.client.birthdate %}
-        <input class="input" name="birthdate" type="date" placeholder="Nacimiento" value="{{data.client.birthdate.toISOString().split('T')[0]}}" required>
+        {% if data.user.birthdate %}
+        <input class="input" name="birthdate" type="date" placeholder="Nacimiento" value="{{data.user.birthdate.toISOString().split('T')[0]}}" required>
         {% else %}
         <input class="input" name="birthdate" type="date" placeholder="Nacimiento" required>
         {% endif %}
@@ -83,7 +83,7 @@
         <button class="button is-success my-4">
           Guardar
         </button>
-        <a href="/" class="button my-4 ml-3">
+        <a href="/users" class="button my-4 ml-3">
           Volver atras
         </a>
       </p>

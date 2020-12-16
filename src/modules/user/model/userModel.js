@@ -1,8 +1,8 @@
 const { Model, DataTypes } = require('sequelize');
 
-module.exports = class ClientModel extends Model {
+module.exports = class UserModel extends Model {
   static setup(sequelizeInstance) {
-    ClientModel.init(
+    UserModel.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -50,7 +50,7 @@ module.exports = class ClientModel extends Model {
       },
       {
         sequelize: sequelizeInstance,
-        modelName: 'Client',
+        modelName: 'User',
       },
     );
   }

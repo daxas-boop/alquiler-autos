@@ -1,4 +1,4 @@
-module.exports = class Client {
+module.exports = class User {
   constructor({
     id,
     name,

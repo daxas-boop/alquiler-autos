@@ -2,8 +2,8 @@
 
 {% block body %}
 
-  <h2 class="title has-text-centered mt-3">Administrá los clientes</h2>
-  <a href="/clients/create" class="button is-primary my-5">Agrega un Cliente</a>
+  <h2 class="title has-text-centered mt-3">Administrá los usuarios</h2>
+  <a href="/users/create" class="button is-primary my-5">Agrega un usuario</a>
 
   {% for message in messages %}
     <div class="notification is-primary is-light my-3">
@@ -35,57 +35,57 @@
         </tr>
       </thead>
       <tbody>
-        {% for client in data.clients %}
+        {% for user in data.users %}
           <tr>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.name}}
+                {{user.name}}
               </span>
             </td>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.surname}}
+                {{user.surname}}
               </span>
             </td>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.documentType}}
+                {{user.documentType}}
               </span>
             </td>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.documentNumber}}
+                {{user.documentNumber}}
               </span>
             </td>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.nationality}}
+                {{user.nationality}}
               </span>
             </td>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.address}}
+                {{user.address}}
               </span>
             </td>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.phone}}
+                {{user.phone}}
               </span>
             </td>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.email}}
+                {{user.email}}
               </span>
             </td>
             <td class="has-text-centered">
               <span class="my-6 tag is-size-6">
-                {{client.birthdate.toISOString().split('T')[0]}}
+                {{user.birthdate.toISOString().split('T')[0]}}
               </span>
             </td>
             <td>
               <span class="is-flex my-6">
-                <a href="/clients/edit/{{client.id}}" class="button is-primary mx-2">Editar</a>
-                <a data-id={{client.id}} data-name={{client.name}} data-surname={{client.surname}} id="delete-btn" class="button is-danger">Eliminar</a>
+                <a href="/users/edit/{{user.id}}" class="button is-primary mx-2">Editar</a>
+                <a data-id={{user.id}} data-name={{user.name}} data-surname={{user.surname}} id="delete-btn" class="button is-danger">Eliminar</a>
               </span>
             </td>
           </tr>
@@ -95,5 +95,5 @@
   </div>
   <div id="prompt-container"></div>
 
-  <script src="./public/js/prompt-delete-client.js"></script>
+  <script src="./public/js/prompt-delete-user.js"></script>
 {% endblock %}

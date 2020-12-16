@@ -16,14 +16,14 @@ function generatePrompt(id, name, surname) {
   $modalHeader.className = 'modal-card-head';
   const $modalTitle = document.createElement('p');
   $modalTitle.className = 'modal-card-title has-text-centered';
-  $modalTitle.innerText = `Eliminar el cliente ${name} ${surname}`;
+  $modalTitle.innerText = `Eliminar el usuario ${name} ${surname}`;
   const $modalBody = document.createElement('section');
   $modalBody.className = 'modal-card-body has-text-centered';
-  $modalBody.innerText = 'Si eliminas el cliente se borrará para siempre.';
+  $modalBody.innerText = 'Si eliminas el usuario se borrará para siempre.';
   const $modalFooter = document.createElement('footer');
   $modalFooter.className = 'modal-card-foot is-flex is-justify-content-center';
   const $deleteBtn = document.createElement('a');
-  $deleteBtn.setAttribute('href', `/clients/delete/${id}`);
+  $deleteBtn.setAttribute('href', `/users/delete/${id}`);
   $deleteBtn.className = 'button is-danger';
   $deleteBtn.innerText = 'Si, eliminalo.';
   const $cancelBtn = document.createElement('button');

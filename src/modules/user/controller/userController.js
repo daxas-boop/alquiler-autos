@@ -1,11 +1,11 @@
 const AbstractController = require('../../abstractController');
-const { fromDataToEntity } = require('../mapper/clientMapper');
+const { fromDataToEntity } = require('../mapper/userMapper');
 
-module.exports = class ClientController extends AbstractController {
-  constructor(ClientService) {
+module.exports = class UserController extends AbstractController {
+  constructor(UserService) {
     super();
-    this.BASE_ROUTE = '/clients';
-    this.ClientService = ClientService;
+    this.BASE_ROUTE = '/users';
+    this.UserService = UserService;
   }
 
   /**
@@ -25,9 +25,9 @@ module.exports = class ClientController extends AbstractController {
    * @param {import('express').Response} res
    */
   async index(req, res) {
-    const clients = await this.ClientService.getAll();
+    const users = await this.UserService.getAll();
     const { messages, errors } = req.session;
-    res.render('client/views/index.html', { data: { clients }, messages, errors });
+    res.render('user/views/index.html', { data: { users }, messages, errors });
     req.session.messages = [];
     req.session.errors = [];
   }
@@ -38,7 +38,7 @@ module.exports = class ClientController extends AbstractController {
    */
   // eslint-disable-next-line class-methods-use-this
   create(req, res) {
-    res.render('client/views/form.html');
+    res.render('user/views/form.html');
   }
 
   /**
@@ -48,8 +48,8 @@ module.exports = class ClientController extends AbstractController {
   async edit(req, res) {
     try {
       const { id } = req.params;
-      const client = await this.ClientService.getById(id);
-      res.render('client/views/form.html', { data: { client } });
+      const user = await this.UserService.getById(id);
+      res.render('user/views/form.html', { data: { user } });
     } catch (e) {
       req.session.errors = [e.message, e.stack];
     }
@@ -61,17 +61,17 @@ module.exports = class ClientController extends AbstractController {
    */
   async save(req, res) {
     try {
-      const client = fromDataToEntity(req.body);
-      const savedClient = await this.ClientService.save(client);
-      if (client.id) {
-        req.session.messages = [`El cliente con ID ${client.id} y nombre ${client.name} se actualizó`];
+      const user = fromDataToEntity(req.body);
+      const savedUser = await this.UserService.save(user);
+      if (user.id) {
+        req.session.messages = [`El usuario con ID ${user.id} y nombre ${user.name} se actualizó`];
       } else {
-        req.session.messages = [`Se creó un cliente con ID ${savedClient.id} y nombre ${savedClient.name}`];
+        req.session.messages = [`Se creó un usuario con ID ${savedUser.id} y nombre ${savedUser.name}`];
       }
-      res.redirect('/clients');
+      res.redirect('/users');
     } catch (e) {
       req.session.errors = [e.message, e.stack];
-      res.redirect('/clients');
+      res.redirect('/users');
     }
   }
 
@@ -82,13 +82,13 @@ module.exports = class ClientController extends AbstractController {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      const client = await this.ClientService.getById(id);
-      await this.ClientService.delete(client);
-      req.session.messages = [`Se eliminó el client con id ${client.id} y nombre ${client.name}`];
-      res.redirect('/clients');
+      const user = await this.UserService.getById(id);
+      await this.UserService.delete(user);
+      req.session.messages = [`Se eliminó el usuario con id ${user.id} y nombre ${user.name}`];
+      res.redirect('/users');
     } catch (e) {
       req.session.errors = [e.message, e.stack];
-      res.redirect('/clients');
+      res.redirect('/users');
     }
   }
 };

@@ -1,7 +1,7 @@
-const Client = require('../entity/client');
+const User = require('../entity/user');
 
 function fromModelToEntity(model) {
-  return new Client(model.toJSON());
+  return new User(model.toJSON());
 }
 
 function fromDataToEntity({
@@ -16,7 +16,7 @@ function fromDataToEntity({
   email,
   birthdate,
 }) {
-  return new Client({
+  return new User({
     id,
     name,
     surname,
