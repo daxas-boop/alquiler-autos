@@ -26,10 +26,9 @@ module.exports = class UserController extends AbstractController {
    */
   async index(req, res) {
     const users = await this.UserService.getAll();
-    const { messages, errors } = req.session;
-    res.render('user/views/index.html', { data: { users }, messages, errors });
+    const { messages } = req.session;
+    res.render('user/views/index.html', { data: { users }, messages });
     req.session.messages = [];
-    req.session.errors = [];
   }
 
   /**
@@ -44,22 +43,24 @@ module.exports = class UserController extends AbstractController {
   /**
    * @param {import('express').Request} req
    * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
    */
-  async edit(req, res) {
+  async edit(req, res, next) {
     try {
       const { id } = req.params;
       const user = await this.UserService.getById(id);
       res.render('user/views/form.html', { data: { user } });
     } catch (e) {
-      req.session.errors = [e.message, e.stack];
+      next(e);
     }
   }
 
   /**
    * @param {import('express').Request} req
    * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
    */
-  async save(req, res) {
+  async save(req, res, next) {
     try {
       const user = fromDataToEntity(req.body);
       const savedUser = await this.UserService.save(user);
@@ -70,16 +71,16 @@ module.exports = class UserController extends AbstractController {
       }
       res.redirect('/users');
     } catch (e) {
-      req.session.errors = [e.message, e.stack];
-      res.redirect('/users');
+      next(e);
     }
   }
 
   /**
    * @param {import('express').Request} req
    * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
    */
-  async delete(req, res) {
+  async delete(req, res, next) {
     try {
       const { id } = req.params;
       const user = await this.UserService.getById(id);
@@ -87,8 +88,7 @@ module.exports = class UserController extends AbstractController {
       req.session.messages = [`Se eliminó el usuario con id ${user.id} y nombre ${user.name}`];
       res.redirect('/users');
     } catch (e) {
-      req.session.errors = [e.message, e.stack];
-      res.redirect('/users');
+      next(e);
     }
   }
 };

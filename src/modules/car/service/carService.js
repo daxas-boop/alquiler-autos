@@ -12,18 +12,17 @@ module.exports = class CarService {
   }
 
   /**
-   *
    * @param {Number} id
    */
   getById(id) {
     if (!id) {
       throw new CarIdNotDefinedError();
     }
+
     return this.carRepository.getById(id);
   }
 
   /**
-   *
    * @param {Car} car
    */
   save(car) {

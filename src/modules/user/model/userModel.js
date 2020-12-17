@@ -51,6 +51,9 @@ module.exports = class UserModel extends Model {
       {
         sequelize: sequelizeInstance,
         modelName: 'User',
+        underscored: true,
+        tableName: 'users',
+        paranoid: true,
       },
     );
   }

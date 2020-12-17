@@ -11,7 +11,6 @@ module.exports = class CarController extends AbstractController {
   }
 
   /**
-   *
    * @param {import('express').Application} app
    */
   configureRoutes(app) {
@@ -24,20 +23,17 @@ module.exports = class CarController extends AbstractController {
   }
 
   /**
-   *
    * @param {import('express').Request} req
    * @param {import('express').Response} res
    */
   async index(req, res) {
     const cars = await this.carService.getAll();
-    const { messages, errors } = req.session;
-    res.render('car/views/index.html', { data: { cars }, messages, errors });
+    const { messages } = req.session;
+    res.render('car/views/index.html', { data: { cars }, messages });
     req.session.messages = [];
-    req.session.errors = [];
   }
 
   /**
-   *
    * @param {import('express').Request} req
    * @param {import('express').Response} res
    */
@@ -45,23 +41,27 @@ module.exports = class CarController extends AbstractController {
     res.render('car/views/form.html');
   }
 
-  async edit(req, res) {
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   */
+  async edit(req, res, next) {
     try {
       const { id } = req.params;
       const car = await this.carService.getById(id);
       res.render('car/views/form.html', { data: { car } });
     } catch (e) {
-      req.session.errors = [e.message, e.stack];
-      res.redirect('/cars');
+      next(e);
     }
   }
 
   /**
-   *
    * @param {import('express').Request} req
    * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
    */
-  async save(req, res) {
+  async save(req, res, next) {
     try {
       const car = fromDataToEntity(req.body);
 
@@ -79,17 +79,16 @@ module.exports = class CarController extends AbstractController {
       }
       res.redirect('/cars');
     } catch (e) {
-      req.errors = [e.message, e.stack];
-      res.redirect('/cars');
+      next(e);
     }
   }
 
   /**
-   *
    * @param {import('express').Request} req
    * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
    */
-  async delete(req, res) {
+  async delete(req, res, next) {
     try {
       const { id } = req.params;
       const car = await this.carService.getById(id);
@@ -97,8 +96,7 @@ module.exports = class CarController extends AbstractController {
       req.session.messages = [`Se eliminó el auto con id ${car.id}, marca ${car.brand} y modelo ${car.model}`];
       res.redirect('/cars');
     } catch (e) {
-      req.errors = [e.message, e.stack];
-      res.redirect('/cars');
+      next(e);
     }
   }
 };

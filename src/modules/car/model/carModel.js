@@ -55,6 +55,9 @@ module.exports = class CarModel extends Model {
       {
         sequelize: sequelizeInstance,
         modelName: 'Car',
+        tableName: 'cars',
+        paranoid: true,
+        underscored: true,
       },
     );
     return CarModel;

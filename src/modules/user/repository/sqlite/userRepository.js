@@ -31,7 +31,7 @@ module.exports = class UserRepository extends AbstractUserRepository {
     const userModel = await this.UserModel.findByPk(id);
 
     if (!userModel) {
-      throw new UserNotFoundError(`El usuario con ID ${id} no se encontró.`);
+      throw new UserNotFoundError(`El usuario con ID ${id} no se encontró (quizas haya sido eliminado).`);
     }
 
     return fromModelToEntity(userModel);

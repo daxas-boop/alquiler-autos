@@ -21,7 +21,7 @@ module.exports = class CarRepository extends AbstractCarRepository {
     const car = await this.CarModel.findByPk(id);
 
     if (car === null) {
-      throw new CarNotFoundError(`El auto con ID ${id} no se encontró`);
+      throw new CarNotFoundError(`El auto con ID ${id} no se encontró (quizas haya sido eliminado)`);
     }
 
     return fromModelToEntity(car);
@@ -44,7 +44,7 @@ module.exports = class CarRepository extends AbstractCarRepository {
    */
   async delete(car) {
     if (!car || !car.id) {
-      throw new CarNotFoundError('El ID del club no está definido');
+      throw new CarNotFoundError('El ID del auto no está definido');
     }
 
     return Boolean(await this.CarModel.destroy({ where: { id: car.id } }));
