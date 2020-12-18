@@ -7,24 +7,29 @@ const path = require('path');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const { Sequelize } = require('sequelize');
 const {
-  UserController, UserService, UserRepository, UserModel,
+  UserController,
+  UserService,
+  UserRepository,
+  UserModel,
 } = require('../modules/user/module');
 const {
   CarController, CarService, CarRepository, CarModel,
 } = require('../modules/car/module');
+const {
+  RentController,
+  RentService,
+  RentRepository,
+  RentModel,
+} = require('../modules/rent/module');
 
 function configureSequelize() {
   const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: process.env.DB_PATH,
   });
-
   return sequelize;
 }
 
-/**
- * @param {DIContainer} container
- */
 function configureSequelizeSession() {
   const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -48,6 +53,15 @@ function configureCarModel(container) {
 function configureUserModel(container) {
   UserModel.setup(container.get('Sequelize'));
   return UserModel;
+}
+
+/**
+ * @param {DIContainer} container
+ */
+function configureRentModel(container) {
+  RentModel.setup(container.get('Sequelize'));
+  RentModel.setupAssociations(container.get('CarModel'), container.get('UserModel'));
+  return RentModel;
 }
 
 /**
@@ -81,6 +95,9 @@ function configureMulter() {
   return multer({ storage });
 }
 
+/**
+ * @param {DIContainer} container
+ */
 function addCommonDefinitions(container) {
   container.addDefinitions({
     SessionSequelize: factory(configureSequelizeSession),
@@ -90,6 +107,9 @@ function addCommonDefinitions(container) {
   });
 }
 
+/**
+ * @param {DIContainer} container
+ */
 function addCarModuleDefinitions(container) {
   container.addDefinitions({
     CarController: object(CarController).construct(get('CarService'), get('Multer')),
@@ -99,6 +119,9 @@ function addCarModuleDefinitions(container) {
   });
 }
 
+/**
+ * @param {DIContainer} container
+ */
 function addUserModuleDefinitions(container) {
   container.addDefinitions({
     UserController: object(UserController).construct(get('UserService')),
@@ -108,10 +131,34 @@ function addUserModuleDefinitions(container) {
   });
 }
 
+/**
+ * @param {DIContainer} container
+ */
+function addRentModuleDefinitions(container) {
+  container.addDefinitions({
+    RentController: object(RentController).construct(
+      get('RentService'),
+      get('CarService'),
+      get('UserService'),
+    ),
+    RentService: object(RentService).construct(get('RentRepository')),
+    RentRepository: object(RentRepository).construct(
+      get('RentModel'),
+      get('CarModel'),
+      get('UserModel'),
+    ),
+    RentModel: factory(configureRentModel),
+  });
+}
+
+/**
+ * @returns {DIContainer} container
+ */
 module.exports = function configureDI() {
   const container = new DIContainer();
   addCommonDefinitions(container);
   addCarModuleDefinitions(container);
   addUserModuleDefinitions(container);
+  addRentModuleDefinitions(container);
   return container;
 };

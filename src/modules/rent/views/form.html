@@ -1,0 +1,87 @@
+{% extends 'views/layout/base.html' %}
+
+{% block body %}
+  <h2 class="title has-text-centered mt-3">Realiza un alquiler</h2>
+  <div class="">
+    <form class="mt-5" action="/rents/save" method="POST" enctype="application/x-www-form-urlencoded">
+      <input type="hidden" name="id" value="{{data.rent.id}}">
+
+      <div class="field mt-3">
+        <label class="label">Usuario</label>
+        <div class="control has-icons-left">
+          <div class="select">
+            <select name="user_id">
+              {% for user in users %}
+              <option value="{{user.id}}">{{user.name}} {{user.surname}} / ID: {{user.id}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <span class="icon is-small is-left">
+            <i class="fas fa-car"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Auto a alquilar</label>
+        <div class="control has-icons-left">
+          <div class="select">
+            <select name="car_id">
+              {% for car in cars %}
+              <option value="{{car.id}}">{{car.brand}} {{car.model}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <span class="icon is-small is-left">
+            <i class="fas fa-car"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Fecha Desde</label>
+        <div class="control has-icons-left">
+          <input class="input" name="start_date" type="datetime-local" required>
+          <span class="icon is-small is-left">
+            <i class="fas fa-car"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Fecha Hasta</label>
+        <div class="control has-icons-left">
+          <input class="input" name="finish_date" type="datetime-local" required>
+          <span class="icon is-small is-left">
+            <i class="fas fa-car"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Metodo de pago</label>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="payment_method" value="tarjeta" {{ "checked" if data.rent.paymentMethod === "tarjeta" }}>
+            Tarjeta de Credito
+          </label>
+          <label class="radio">
+            <input type="radio" name="payment_method" value="efectivo" {{ "checked" if not data.rent.paymentMethod === "efectivo" }}>
+            Efectivo
+          </label>
+        </div>
+      </div>
+
+      <div class="field is-grouped is-grouped-centered">
+        <p class="control">
+          <button class="button is-success my-4">
+            Guardar
+          </button>
+          <a href="/rents" class="button my-4 ml-3">
+            Volver atras
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+{% endblock %}
