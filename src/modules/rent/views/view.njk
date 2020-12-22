@@ -1,0 +1,71 @@
+{% extends 'views/layout/base.njk' %}
+
+{% block body %}
+  <div class="container">
+    <h1 class="title mt-5">Renta #: {{rent.id}}</h1>
+    <table class="table is-fullwidth is-size-5">
+      <tbody>
+        <tr>
+          <th>Usuario</th>
+          <td>{{rent.User.name}} {{rent.User.surname}}</td>
+        </tr>
+        <tr>
+          <th>Auto</th>
+          <td>{{rent.Car.brand}} {{rent.Car.model}}</td>
+        </tr>
+        <tr>
+          <th>Precio por Dia</th>
+          <td>$ {{rent.pricePerDay}}</td>
+        </tr>
+        <tr>
+          <th>Empieza el dia</th>
+          <td>{{rent.startDate.toISOString().split('.', 1)[0].replace('T',' ')}} UTC</td>
+        </tr>
+        <tr>
+          <th>Finaliza el dia</th>
+          <td>{{rent.finishDate.toISOString().split('.', 1)[0].replace('T',' ')}} UTC</td>
+        </tr>
+        <tr>
+          <th>Precio Total</th>
+          <td>$ {{rent.totalPrice}}</td>
+        </tr>
+        <tr>
+          <th>Metodo de pago</th>
+          <td>{{rent.paymentMethod}}</td>
+        </tr>
+        <tr>
+          <th>Esta pago</th>
+          <td>
+            {{"Si" if rent.isPaid}}
+            {{"No" if not rent.isPaid}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="field is-grouped my-4">
+      <p class="control">
+        <a href="/rents/edit/{{rent.id}}">
+          <button class="button is-primary mx-2">
+            <span class="icon">
+              <i class="fas fa-edit"></i>
+            </span>
+            <span>Editar</span>
+          </button>
+        </a>
+        <button id="delete-btn" data-id="{{rent.id}}" data-user="{{rent.User.name}} {{rent.User.surname}}" class="button is-danger">
+          <span class="icon">
+            <i class="fas fa-trash-alt"></i>
+          </span>
+          <span>Eliminar</span>
+        </button>
+      </p>
+    </div>
+  </div>
+
+  <div id="prompt-container"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/public/js/prompt-delete-rent.js"></script>
+{% endblock %}
+

@@ -23,6 +23,9 @@ module.exports = class RentController extends AbstractController {
     const ROUTE = this.BASE_ROUTE;
     app.get(`${ROUTE}`, this.index.bind(this));
     app.get(`${ROUTE}/create`, this.create.bind(this));
+    app.get(`${ROUTE}/view/:id`, this.view.bind(this));
+    app.get(`${ROUTE}/edit/:id`, this.edit.bind(this));
+    app.get(`${ROUTE}/delete/:id`, this.delete.bind(this));
     app.post(`${ROUTE}/save`, this.save.bind(this));
   }
 
@@ -33,7 +36,7 @@ module.exports = class RentController extends AbstractController {
   async index(req, res) {
     const rents = await this.RentService.getAll();
     const { messages } = req.session;
-    res.render('rent/views/index.html', { data: { rents }, messages });
+    res.render('rent/views/index.njk', { data: { rents }, messages });
     req.session.messages = [];
   }
 
@@ -55,7 +58,39 @@ module.exports = class RentController extends AbstractController {
         throw new RentError('Se necesita por lo menos un auto para hacer un alquiler');
       }
 
-      res.render('rent/views/form.html', { users, cars });
+      res.render('rent/views/form.njk', { users, cars });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   */
+  async view(req, res, next) {
+    try {
+      const { id } = req.params;
+      const rent = await this.RentService.getById(id);
+      res.render('rent/views/view.njk', { rent });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   */
+  async edit(req, res, next) {
+    try {
+      const { id } = req.params;
+      const rent = await this.RentService.getById(id);
+      const users = await this.UserService.getAll();
+      const cars = await this.CarService.getAll();
+      res.render('rent/views/form.njk', { rent, users, cars });
     } catch (e) {
       next(e);
     }
@@ -79,6 +114,23 @@ module.exports = class RentController extends AbstractController {
       } else {
         req.session.messages = [`Se creó un nuevo alquiler con id:${savedRent.id}`];
       }
+      res.redirect('/rents');
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   */
+  async delete(req, res, next) {
+    try {
+      const { id } = req.params;
+      const rent = await this.RentService.getById(id);
+      await this.RentService.delete(rent);
+      req.session.messages = [`Se eliminó la renta con ID: ${rent.id}`];
       res.redirect('/rents');
     } catch (e) {
       next(e);
