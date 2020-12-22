@@ -29,7 +29,7 @@ app.get('/', CarController.index.bind(CarController));
 // eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
   res.status(500);
-  res.render('views/layout/error.html', { error });
+  res.render('views/layout/error.njk', { error });
 });
 
 const PUERTO = process.env.PORT || 8080;
