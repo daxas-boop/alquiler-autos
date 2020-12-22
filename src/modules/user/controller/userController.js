@@ -15,6 +15,7 @@ module.exports = class UserController extends AbstractController {
     const ROUTE = this.BASE_ROUTE;
     app.get(`${ROUTE}`, this.index.bind(this));
     app.get(`${ROUTE}/create`, this.create.bind(this));
+    app.get(`${ROUTE}/view/:id`, this.view.bind(this));
     app.get(`${ROUTE}/edit/:id`, this.edit.bind(this));
     app.get(`${ROUTE}/delete/:id`, this.delete.bind(this));
     app.post(`${ROUTE}/save`, this.save.bind(this));
@@ -27,7 +28,7 @@ module.exports = class UserController extends AbstractController {
   async index(req, res) {
     const users = await this.UserService.getAll();
     const { messages } = req.session;
-    res.render('user/views/index.html', { data: { users }, messages });
+    res.render('user/views/index.njk', { data: { users }, messages });
     req.session.messages = [];
   }
 
@@ -37,7 +38,22 @@ module.exports = class UserController extends AbstractController {
    */
   // eslint-disable-next-line class-methods-use-this
   create(req, res) {
-    res.render('user/views/form.html');
+    res.render('user/views/form.njk');
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   */
+  async view(req, res, next) {
+    try {
+      const { id } = req.params;
+      const user = await this.UserService.getById(id);
+      res.render('user/views/view.njk', { user });
+    } catch (e) {
+      next(e);
+    }
   }
 
   /**
@@ -49,7 +65,7 @@ module.exports = class UserController extends AbstractController {
     try {
       const { id } = req.params;
       const user = await this.UserService.getById(id);
-      res.render('user/views/form.html', { data: { user } });
+      res.render('user/views/form.njk', { user });
     } catch (e) {
       next(e);
     }

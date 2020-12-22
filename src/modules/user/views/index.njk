@@ -1,0 +1,103 @@
+{% extends 'views/layout/base.njk' %}
+
+{% block body %}
+  <div class="container">
+    <h2 class="title has-text-centered mt-3">Administrá los usuarios</h2>
+    <a href="/users/create" class="button is-primary my-5">Agregá un usuario</a>
+
+    {% for message in messages %}
+      <div class="notification is-primary is-light my-3">
+        {{message}}
+      </div>
+    {% endfor %}
+
+    {% for error in errors %}
+      <div class="notification is-danger is-light">
+        {{error}}
+      </div>
+    {% endfor %}
+
+    <div class="table-container">
+      <table class="table is-striped is-narrow is-hoverable is-fullwidth is-size-6">
+        <thead>
+          <tr>
+            <th class="has-text-centered">Nombre</th>
+            <th class="has-text-centered">Numero Documento</th>
+            <th class="has-text-centered">Nacionalidad</th>
+            <th class="has-text-centered">Direccion</th>
+            <th class="has-text-centered">Telefono</th>
+            <th class="has-text-centered">Fecha Nacimiento</th>
+            <th class="has-text-centered">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in data.users %}
+            <tr>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6">
+                  {{user.name}} {{user.surname}}
+                </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6">
+                  {{user.documentNumber}}
+                </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6">
+                  {{user.nationality}}
+                </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6">
+                  {{user.address}}
+                </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6">
+                  {{user.phone}}
+                </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6">
+                  {{user.birthdate.toISOString().split('T')[0]}}
+                </span>
+              </td>
+              <td>
+                <span class="is-flex my-6">
+                  <a href="/users/view/{{user.id}}">
+                    <button class="button is-link">
+                      <span class="icon">
+                        <i class="fas fa-search"></i>
+                      </span>
+                      <span>Ver</span>
+                    </button>
+                  </a>
+                  <a href="/users/edit/{{user.id}}">
+                    <button class="button is-primary mx-1">
+                      <span class="icon">
+                        <i class="fas fa-edit"></i>
+                      </span>
+                      <span>Editar</span>
+                    </button>
+                  </a>
+                  <button id="delete-btn" data-id="{{user.id}}" data-name="{{user.name}}" data-surname="{{user.surname}}" class="button is-danger">
+                    <span class="icon">
+                      <i class="fas fa-trash-alt"></i>
+                    </span>
+                    <span>Eliminar</span>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div id="prompt-container"></div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/public/js/prompt-delete-user.js"></script>
+{% endblock %}
