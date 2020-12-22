@@ -1,0 +1,126 @@
+{% extends 'views/layout/base.njk' %}
+
+{% block body %}
+  <div class="container">
+    <h2 class="title has-text-centered mt-3">Administrá los autos</h2>
+
+    <a href="/cars/create" class="button is-primary my-5">Agrega un auto</a>
+
+    {% for message in messages %}
+      <div class="notification is-primary is-light my-3">
+        {{message}}
+      </div>
+    {% endfor %}
+
+    {% for error in errors %}
+      <div class="notification is-danger is-light">
+        {{error}}
+      </div>
+    {% endfor %}
+    
+    <div class="table-container">
+      <table class="table is-striped is-narrow is-hoverable is-fullwidth">
+        <thead>
+          <tr>
+            <th class="has-text-centered">Marca</th>
+            <th class="has-text-centered">Modelo</th>
+            <th class="has-text-centered">Año</th>
+            <th class="has-text-centered">Kilometros</th>
+            <th class="has-text-centered">Color</th>
+            <th class="has-text-centered">Aire</th>
+            <th class="has-text-centered">Pasajeros</th>
+            <th class="has-text-centered">Transmision</th>
+            <th class="has-text-centered">Precio Por Dia</th>
+            <th class="has-text-centered">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for car in data.cars %}
+          <tr>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+                {{car.brand}}
+              </span>
+            </td>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+                {{car.model}}
+              </span>
+            </td>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+                {{car.year}}
+              </span>
+            </td>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+                {{car.mileage}}
+              </span>
+            </td>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+                {{car.color}}
+              </span>
+            </td>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+              {% if car.airConditioning %}
+                Si
+              {% else %}
+                No
+              {% endif %}
+              </span>
+            </td>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+                {{car.passengers}}
+              </span>
+            </td>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+                {{car.transmission.charAt(0).toUpperCase() + car.transmission.slice(1)}}
+              </span>
+            </td>
+            <td class="has-text-centered">
+              <span class="my-6 tag is-size-6">
+                {{car.priceDay}} $
+              </span>
+            </td>
+            <td>
+              <span class="is-flex my-6">
+                <a href="/cars/view/{{car.id}}">
+                  <button class="button is-link">
+                    <span class="icon">
+                      <i class="fas fa-search"></i>
+                    </span>
+                    <span>Ver</span>
+                  </button>
+                </a>
+                <a href="/cars/edit/{{car.id}}">
+                  <button class="button is-primary mx-1">
+                    <span class="icon">
+                      <i class="fas fa-edit"></i>
+                    </span>
+                    <span>Editar</span>
+                  </button>
+                </a>
+                <button id="delete-btn" data-id="{{car.id}}" data-brand="{{car.brand}}" data-model="{{car.model}}" class="button is-danger">
+                  <span class="icon">
+                    <i class="fas fa-trash-alt"></i>
+                  </span>
+                  <span>Eliminar</span>
+                </button>
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div id="prompt-container"></div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/public/js/prompt-delete-car.js"></script>
+{% endblock %}
