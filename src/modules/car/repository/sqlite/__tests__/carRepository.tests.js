@@ -1,4 +1,4 @@
-const { Sequielize, Sequelize } = require('sequelize');
+const { Sequelize } = require('sequelize');
 const CarRepository = require('../carRepository');
 const CarNotFoundError = require('../../error/carNotFoundError');
 const CarModel = require('../../../model/carModel');

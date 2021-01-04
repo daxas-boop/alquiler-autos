@@ -18,7 +18,7 @@ test('Guardar un auto llama al metodo save del repositorio 1 vez', () => {
 });
 
 test('Llamar a guardar un auto sin pasar un auto da un error especifico', async () => {
-  await expect(service.save).rejects.toThrowError(CarNotDefinedError);
+  await expect(service.save()).rejects.toThrow(CarNotDefinedError);
 });
 
 test('Borrar un auto llama al metodo delete del repositorio 1 vez', () => {
@@ -28,7 +28,7 @@ test('Borrar un auto llama al metodo delete del repositorio 1 vez', () => {
 
 test('Borrar un auto sin pasar una instancia de "Car" da un error especifico', () => {
   service.delete({ id: 1 });
-  expect(service.delete).rejects.toThrowError(CarNotDefinedError);
+  expect(service.delete()).rejects.toThrow(CarNotDefinedError);
 });
 
 test('Consultar auto por id llama al metodo getById del repositorio 1 vez', () => {
@@ -37,10 +37,10 @@ test('Consultar auto por id llama al metodo getById del repositorio 1 vez', () =
 });
 
 test('Consultar auto por id sin pasar un auto da un error especifico', async () => {
-  await expect(service.getById).rejects.toThrowError(CarIdNotDefinedError);
+  await expect(service.getById()).rejects.toThrow(CarIdNotDefinedError);
 });
 
-test('Consultar todos los equipos llama al metodo getAll del repositorio 1 vez', () => {
+test('Consultar todos los autos llama al metodo getAll del repositorio 1 vez', () => {
   service.getAll();
   expect(repositoryMock.getAll).toHaveBeenCalledTimes(1);
 });
