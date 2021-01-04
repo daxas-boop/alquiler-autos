@@ -56,5 +56,6 @@ module.exports = class UserModel extends Model {
         paranoid: true,
       },
     );
+    return UserModel;
   }
 };

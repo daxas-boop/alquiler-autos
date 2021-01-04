@@ -14,13 +14,13 @@ module.exports = class UserRepository extends AbstractUserRepository {
   }
 
   async save(user) {
-    let savedModel;
+    let userModel;
     if (user.id) {
-      savedModel = await this.UserModel.build(user, { isNewRecord: false }).save();
+      userModel = await this.UserModel.build(user, { isNewRecord: false }).save();
     } else {
-      savedModel = await this.UserModel.create(user);
+      userModel = await this.UserModel.create(user);
     }
-    return savedModel;
+    return fromModelToEntity(userModel);
   }
 
   /**
@@ -41,6 +41,6 @@ module.exports = class UserRepository extends AbstractUserRepository {
     if (!user || !user.id) {
       throw new UserNotFoundError();
     }
-    return Boolean(this.UserModel.destroy({ where: { id: user.id } }));
+    return Boolean(await this.UserModel.destroy({ where: { id: user.id } }));
   }
 };
