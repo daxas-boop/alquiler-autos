@@ -20,8 +20,8 @@ module.exports = class RentRepository extends AbstractRentRepository {
   async getAll() {
     const rents = await this.RentModel.findAll({
       include: [
-        { model: this.CarModel, paranoid: false },
-        { model: this.UserModel, paranoid: false },
+        { model: this.CarModel, paranoid: false, as: 'car' },
+        { model: this.UserModel, paranoid: false, as: 'user' },
       ],
     });
     return rents.map((r) => fromModelToEntity(r, fromUserModelToEntity, fromCarModelToEntity));
@@ -31,7 +31,10 @@ module.exports = class RentRepository extends AbstractRentRepository {
    * @param {import('../../entity/rent')} rent
    */
   async save(rent) {
-    return this.RentModel.build(rent, { isNewRecord: !rent.id }).save();
+    const newRent = await this.RentModel.build(rent, { isNewRecord: !rent.id });
+    newRent.setDataValue('car_id', rent.Car.id);
+    newRent.setDataValue('user_id', rent.User.id);
+    return newRent.save();
   }
 
   /**
@@ -40,8 +43,8 @@ module.exports = class RentRepository extends AbstractRentRepository {
   async getById(id) {
     const rent = await this.RentModel.findByPk(id, {
       include: [
-        { model: this.CarModel, paranoid: false },
-        { model: this.UserModel, paranoid: false },
+        { model: this.CarModel, paranoid: false, as: 'car' },
+        { model: this.UserModel, paranoid: false, as: 'user' },
       ],
     });
 
@@ -60,6 +63,6 @@ module.exports = class RentRepository extends AbstractRentRepository {
     if (!rent || !rent.id) {
       throw new RentNotFoundError('El ID de la renta no está definido');
     }
-    return Boolean(this.RentModel.destroy({ where: { id: rent.id } }));
+    return Boolean(await this.RentModel.destroy({ where: { id: rent.id } }));
   }
 };
