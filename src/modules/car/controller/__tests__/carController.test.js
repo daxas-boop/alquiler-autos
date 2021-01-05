@@ -163,7 +163,7 @@ test('Save llama al servicio con el body y redirecciona a /cars', async () => {
   expect(redirectMock).toHaveBeenCalledWith('/cars');
 });
 
-test('Save tira un error si no se pasa un data en el body', async () => {
+test('Save da error caundo se pasa un body vacio', async () => {
   const nextMock = jest.fn();
   const bodyMock = {};
 
