@@ -15,26 +15,6 @@ module.exports = class RentModel extends Model {
           allowNull: true,
           primaryKey: true,
         },
-        carId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: {
-              tableName: 'Car',
-            },
-            key: 'id',
-          },
-        },
-        userId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: {
-              tableName: 'User',
-            },
-            key: 'id',
-          },
-        },
         pricePerDay: {
           type: DataTypes.INTEGER,
           allowNull: false,
@@ -68,6 +48,7 @@ module.exports = class RentModel extends Model {
         paranoid: true,
       },
     );
+    return RentModel;
   }
 
   /**
@@ -75,7 +56,7 @@ module.exports = class RentModel extends Model {
    * @param {import('../../user/model/userModel')} UserModel
    */
   static setupAssociations(CarModel, UserModel) {
-    RentModel.belongsTo(CarModel, { foreignKey: 'carId' });
-    RentModel.belongsTo(UserModel, { foreignKey: 'userId' });
+    RentModel.belongsTo(CarModel, { as: 'car', foreignKey: 'car_id' });
+    RentModel.belongsTo(UserModel, { as: 'user', foreignKey: 'user_id' });
   }
 };

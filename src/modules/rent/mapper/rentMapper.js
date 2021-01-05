@@ -1,60 +1,55 @@
 const Rent = require('../entity/rent');
+const Car = require('../../car/entity/car');
+const User = require('../../user/entity/user');
 
 function fromDataToEntity({
   id,
-  car_id: carId,
-  user_id: userId,
   price_day: pricePerDay,
   start_date: startDate,
   finish_date: finishDate,
   total_price: totalPrice,
   payment_method: paymentMethod,
   is_paid: isPaid,
-  Car,
-  User,
+  car_id: carId,
+  user_id: userId,
 }) {
   return new Rent({
     id,
-    carId,
-    userId,
     pricePerDay,
     startDate,
     finishDate,
     totalPrice,
     paymentMethod,
     isPaid,
-    Car,
-    User,
+    Car: new Car({ id: Number(carId) }),
+    User: new User({ id: Number(userId) }),
   });
 }
 
 function fromModelToEntity({
   id,
-  carId,
-  userId,
   pricePerDay,
   startDate,
   finishDate,
   totalPrice,
   paymentMethod,
   isPaid,
-  Car,
-  User,
+  car,
+  user,
 }, fromUserModelToEntity, fromCarModelToEntity) {
-  Car = Car ? fromCarModelToEntity(Car) : {};
-  User = User ? fromUserModelToEntity(User) : {};
+  const carEntity = car ? fromCarModelToEntity(car) : {};
+  const userEntity = user ? fromUserModelToEntity(user) : {};
+
   return new Rent({
     id,
-    carId,
-    userId,
     pricePerDay,
     startDate,
     finishDate,
     totalPrice,
     paymentMethod,
     isPaid,
-    Car,
-    User,
+    Car: carEntity,
+    User: userEntity,
   });
 }
 
