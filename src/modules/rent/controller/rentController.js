@@ -103,11 +103,8 @@ module.exports = class RentController extends AbstractController {
    */
   async save(req, res, next) {
     try {
-      const formData = { ...req.body };
-      const { car_id: carId, user_id: userId } = formData;
-      formData.Car = await this.CarService.getById(carId);
-      formData.User = await this.UserService.getById(userId);
-      const rent = fromDataToEntity(formData);
+      const rent = fromDataToEntity(req.body);
+      rent.Car = await this.CarService.getById(rent.Car.id);
       const savedRent = await this.RentService.save(rent);
       if (rent.id) {
         req.session.messages = [`Se actualizó el alquiler con id:${rent.id}`];
