@@ -34,15 +34,13 @@ module.exports = class RentService {
   /**
    * @param {import('../entity/rent')} rent
    */
-  save(rent) {
+  async save(rent) {
     if (!(rent instanceof Rent)) {
       throw new RentNotDefinedError();
     }
 
     rent.pricePerDay = rent.Car.priceDay;
-    const milisecondDiff = new Date(rent.finishDate).getTime() - new Date(rent.startDate).getTime();
-    const dayDiff = Math.round(milisecondDiff / (1000 * 3600 * 24));
-    rent.totalPrice = dayDiff * rent.Car.priceDay;
+    rent.calculateTotalPrice(rent.Car.priceDay);
 
     return this.RentRepository.save(rent);
   }

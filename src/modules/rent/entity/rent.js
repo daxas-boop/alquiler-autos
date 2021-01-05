@@ -1,8 +1,6 @@
 module.exports = class Rent {
   constructor({
     id,
-    carId,
-    userId,
     pricePerDay,
     startDate,
     finishDate,
@@ -13,8 +11,6 @@ module.exports = class Rent {
     User,
   }) {
     this.id = id;
-    this.carId = carId;
-    this.userId = userId;
     this.pricePerDay = pricePerDay;
     this.startDate = startDate;
     this.finishDate = finishDate;
@@ -23,5 +19,11 @@ module.exports = class Rent {
     this.isPaid = isPaid;
     this.Car = Car;
     this.User = User;
+  }
+
+  calculateTotalPrice(carEntity) {
+    const milisecondDiff = new Date(this.finishDate).getTime() - new Date(this.startDate).getTime();
+    const dayDiff = Math.round(milisecondDiff / (1000 * 3600 * 24));
+    this.totalPrice = dayDiff * carEntity.priceDay;
   }
 };
