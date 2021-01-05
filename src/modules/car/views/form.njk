@@ -96,11 +96,11 @@
             <label for="transmission" class="label">Transmision</label>
             <div class="control">
               <label class="radio">
-                <input type="radio" name="transmission" value="automatica" {{"checked" if car.transmission === 'automatica'}}>
+                <input type="radio" name="transmission" value="automatica" {{"checked" if car.transmission === 'automatica'}} required>
                 Automatica
               </label>
               <label class="radio">
-                <input type="radio" name="transmission" value="manual" {{"checked" if car.transmission === 'manual'}}>
+                <input type="radio" name="transmission" value="manual" {{"checked" if car.transmission === 'manual'}} required>
                 Manual
               </label>
             </div>
