@@ -7,9 +7,7 @@ const container = configureDependencyInjection();
  * @type {import('sequelize').Sequelize} mainDb
  */
 const mainDb = container.get('Sequelize');
-
 container.get('CarModel');
-
 mainDb.sync();
 
 /**
