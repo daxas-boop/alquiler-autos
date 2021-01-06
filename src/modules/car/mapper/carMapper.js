@@ -1,58 +1,38 @@
 const Car = require('../entity/car');
 
-function fromDbToEntity({
-  id,
-  marca,
-  modelo,
-  año,
-  kilometros,
-  color,
-  aire,
-  pasajeros,
-  transmision,
-  imagen,
-}) {
-  return new Car({
-    id,
-    marca,
-    modelo,
-    año,
-    kilometros,
-    color,
-    aire,
-    pasajeros,
-    transmision,
-    imagen,
-  });
+function fromModelToEntity(model) {
+  return new Car(model.toJSON());
 }
 
 function fromDataToEntity({
   id,
-  marca,
-  modelo,
-  año,
-  kilometros,
+  brand,
+  model,
+  year,
+  mileage,
   color,
-  aire,
-  pasajeros,
-  transmision,
-  imagen,
+  air_conditioning: airConditioning,
+  passengers,
+  transmission,
+  price_day: priceDay,
+  image,
 }) {
   return new Car({
     id,
-    marca,
-    modelo,
-    año,
-    kilometros,
+    brand,
+    model,
+    year,
+    mileage,
     color,
-    aire,
-    pasajeros,
-    transmision,
-    imagen,
+    airConditioning,
+    passengers,
+    transmission,
+    priceDay,
+    image,
   });
 }
 
 module.exports = {
-  fromDbToEntity,
+  fromModelToEntity,
   fromDataToEntity,
 };

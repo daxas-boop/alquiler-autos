@@ -1,0 +1,110 @@
+{% extends 'views/layout/base.njk' %}
+
+{% block body %}
+  <div class="container">
+    {% if rent %}
+    <h2 class="title has-text-centered mt-3">Edita el alquiler #{{rent.id}} de {{rent.User.name}} {{rent.User.surname}}.</h2>
+    {% else %}
+    <h2 class="title has-text-centered mt-3">Realiza un alquiler</h2>
+    {% endif %}
+    <form class="mt-5" action="/rents/save" method="POST" enctype="application/x-www-form-urlencoded">
+      <input type="hidden" name="id" value="{{rent.id}}">
+
+      <div class="field mt-3">
+        <label class="label">Usuario</label>
+        <div class="control has-icons-left">
+          <div class="select">
+            <select name="user_id" required>
+              {% for user in users %}
+              <option value="{{user.id}}" {{"selected" if user.id == rent.User.id}}>
+                {{user.name}} {{user.surname}} / ID: {{user.id}}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <span class="icon is-small is-left">
+            <i class="fas fa-car"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Auto a alquilar</label>
+        <div class="control has-icons-left">
+          <div class="select">
+            <select name="car_id" required>
+              {% for car in cars %}
+              <option value="{{car.id}}" {{"selected" if car.id == rent.Car.id}}>
+                {{car.brand}} {{car.model}}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <span class="icon is-small is-left">
+            <i class="fas fa-car"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Fecha Desde</label>
+        <div class="control has-icons-left">
+          <input class="input" name="start_date" value="{{rent.startDate.toISOString().split('.', 1)[0] if rent.startDate}}" type="datetime-local" required>
+          <span class="icon is-small is-left">
+            <i class="fas fa-car"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Fecha Hasta</label>
+        <div class="control has-icons-left">
+          <input class="input" name="finish_date" type="datetime-local" value="{{rent.finishDate.toISOString().split('.', 1)[0] if rent.finishDate}}" required>
+          <span class="icon is-small is-left">
+            <i class="fas fa-car"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Metodo de pago</label>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="payment_method" value="tarjeta" {{ "checked" if rent.paymentMethod === "tarjeta" }} required>
+            Tarjeta de Credito
+          </label>
+          <label class="radio">
+            <input type="radio" name="payment_method" value="efectivo" {{ "checked" if rent.paymentMethod === "efectivo" }} required>
+            Efectivo
+          </label>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <label class="label">Esta Abonado</label>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="is_paid" value="1" {{ "checked" if rent.isPaid }} required>
+            Si
+          </label>
+          <label class="radio">
+            <input type="radio" name="is_paid" value="0" {{ "checked" if not rent.isPaid }} required>
+            No
+          </label>
+        </div>
+      </div>
+
+      <div class="field is-grouped is-grouped-centered">
+        <p class="control">
+          <button class="button is-success my-4">
+            Guardar
+          </button>
+          <a href="/rents" class="button my-4 ml-3">
+            Volver atras
+          </a>
+        </p>
+      </div>
+
+    </form>
+  </div>
+{% endblock %}

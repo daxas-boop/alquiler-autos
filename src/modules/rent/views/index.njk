@@ -1,0 +1,89 @@
+{% extends 'views/layout/base.njk' %} 
+
+{% block body %}
+  <div class="container">
+    <h1 class="title has-text-centered mt-3">Administrá los alquileres</h1>
+    <a href="/rents/create" class="button is-primary my-5">Agrega un alquiler</a>
+
+    {% for message in messages %}
+      <div class="notification is-primary is-light my-3">{{message}}</div>
+    {% endfor %} {% for error in errors %}
+      <div class="notification is-danger is-light">{{error}}</div>
+    {% endfor %}
+
+    <div class="table-container">
+      <table class="table is-narrow is-hoverable is-fullwidth">
+        <thead>
+          <tr>
+            <th class="has-text-centered">Auto</th>
+            <th class="has-text-centered">Cliente</th>
+            <th class="has-text-centered">Rentado desde</th>
+            <th class="has-text-centered">Rentado hasta</th>
+            <th class="has-text-centered">Precio Total</th>
+            <th class="has-text-centered">Abonado</th>
+            <th class="has-text-centered">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rent in data.rents %}
+            <tr>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6"> {{rent.Car.brand}} {{rent.Car.model}} </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6"> {{rent.User.name}} {{rent.User.surname}} </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6"> {{rent.startDate.toISOString().split('.', 1)[0].replace('T',' ')}} </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6"> {{rent.finishDate.toISOString().split('.', 1)[0].replace('T',' ')}} </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6"> $ {{rent.totalPrice}} </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="my-6 tag is-size-6"> {{ "Si" if rent.isPaid }} {{ "No" if not rent.isPaid }} </span>
+              </td>
+              <td class="has-text-centered">
+                <span class="is-flex my-6">
+                  <a href="/rents/view/{{rent.id}}">
+                    <button class="button is-link">
+                      <span class="icon">
+                        <i class="fas fa-search"></i>
+                      </span>
+                      <span>Ver</span>
+                    </button>
+                  </a>
+                  <a href="/rents/edit/{{rent.id}}">
+                    <button class="button is-primary mx-1">
+                      <span class="icon">
+                        <i class="fas fa-edit"></i>
+                      </span>
+                      <span>Editar</span>
+                    </button>
+                  </a>
+                   <button 
+                   id="delete-btn" 
+                   data-id="{{rent.id}}" 
+                   data-user="{{rent.User.name}} {{rent.User.surname}}"
+                   class="button is-danger">
+                    <span class="icon">
+                      <i class="fas fa-trash-alt"></i>
+                    </span>
+                    <span>Eliminar</span>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          {% endfor %} 
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="prompt-container"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/public/js/prompt-delete-rent.js"></script>
+{% endblock %}

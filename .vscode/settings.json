@@ -5,6 +5,12 @@
       "driver": "SQLite",
       "name": "database",
       "database": "${workspaceFolder:alquiler-autos}/data/database.db"
+    },
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "session_db",
+      "database": "${workspaceFolder:alquiler-autos}/data/session_database.db"
     }
   ]
 }

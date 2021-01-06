@@ -1,29 +1,16 @@
 const AbstractCarRepository = require('../abstractCarRepository');
 const CarNotFoundError = require('../error/carNotFoundError');
-const { fromDbToEntity } = require('../../mapper/carMapper');
+const { fromModelToEntity } = require('../../mapper/carMapper');
 
 module.exports = class CarRepository extends AbstractCarRepository {
-  constructor(databaseAdapter) {
+  constructor(CarModel) {
     super();
-    this.databaseAdapter = databaseAdapter;
+    this.CarModel = CarModel;
   }
 
   async getAll() {
-    const cars = this.databaseAdapter.prepare(`
-      SELECT
-        id,
-        marca,
-        modelo,
-        año,
-        kilometros,
-        color,
-        aire,
-        pasajeros,
-        transmision,
-        imagen
-      FROM cars
-    `).all();
-    return cars.map((carData) => fromDbToEntity(carData));
+    const cars = await this.CarModel.findAll();
+    return cars.map(fromModelToEntity);
   }
 
   /**
@@ -31,106 +18,35 @@ module.exports = class CarRepository extends AbstractCarRepository {
    * @param {Number} id
    */
   async getById(id) {
-    const car = this.databaseAdapter.prepare(`
-      SELECT
-        id,
-        marca,
-        modelo,
-        año,
-        kilometros,
-        color,
-        aire,
-        pasajeros,
-        transmision
-      FROM cars WHERE id = ?
-    `).get(id);
+    const car = await this.CarModel.findByPk(id);
 
-    if (car === undefined) {
-      throw new CarNotFoundError(`El auto con ID ${id} no se encontró`);
+    if (car === null) {
+      throw new CarNotFoundError(`El auto con ID ${id} no se encontró (quizas haya sido eliminado)`);
     }
 
-    return fromDbToEntity(car);
+    return fromModelToEntity(car);
   }
 
   async save(car) {
-    let id;
+    let modelCar;
     if (car.id) {
-      id = car.id;
-      const statement = this.databaseAdapter.prepare(`
-        UPDATE cars SET
-          ${car.imagen ? 'imagen = ?,' : ''}
-          marca = ?,
-          modelo = ?,
-          año = ?,
-          kilometros = ?,
-          color = ?,
-          aire = ?,
-          pasajeros = ?,
-          transmision = ?
-          WHERE id = ?
-      `);
-
-      const params = [
-        car.marca,
-        car.modelo,
-        car.año,
-        car.kilometros,
-        car.color,
-        car.aire,
-        car.pasajeros,
-        car.transmision,
-        car.id,
-      ];
-
-      if (car.imagen) {
-        params.unshift(car.imagen);
-      }
-
-      statement.run(params);
+      modelCar = await this.CarModel.build(car, { isNewRecord: false }).save();
     } else {
-      const statement = this.databaseAdapter.prepare(`
-        INSERT INTO cars(
-          marca,
-          modelo,
-          año,
-          kilometros,
-          color,
-          aire,
-          pasajeros,
-          transmision,
-          imagen
-        ) VALUES (?, ?, ? ,? ,? ,? ,? ,? ,?)
-      `);
-
-      const result = statement.run(
-        car.marca,
-        car.modelo,
-        car.año,
-        car.kilometros,
-        car.color,
-        car.aire,
-        car.pasajeros,
-        car.transmision,
-        car.imagen,
-      );
-
-      id = result.lastInsertRowid;
+      modelCar = await this.CarModel.create(car);
     }
 
-    return this.getById(id);
+    return fromModelToEntity(modelCar);
   }
 
   /**
    *
    * @param {import('../../entity/car')} car
    */
-  delete(car) {
+  async delete(car) {
     if (!car || !car.id) {
-      throw new CarNotFoundError('El ID del club no está definido');
+      throw new CarNotFoundError('El ID del auto no está definido');
     }
-    const statement = this.databaseAdapter.prepare(`
-    DELETE FROM cars WHERE id = ? `);
-    statement.run(car.id);
-    return true;
+
+    return Boolean(await this.CarModel.destroy({ where: { id: car.id } }));
   }
 };

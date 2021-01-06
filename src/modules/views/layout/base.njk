@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Alquier de Autos</title>
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+
+  <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <strong>Alquiler de autos</strong>
+      </a>
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/users">
+          Gestionar usuarios
+        </a>
+        <a class="navbar-item" href="/rents">
+          Gestionar reservas
+        </a>
+        <a class="navbar-item" href="/cars">
+          Gestionar autos
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  {% block body %}{% endblock %}
+  {% block scripts %}{% endblock %}
+  <script src="/public/js/navbar.js"></script>
+</body>
+</html>
