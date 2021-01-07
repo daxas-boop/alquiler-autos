@@ -57,13 +57,19 @@ test('View renderea view.njk y llama al servicio con la id del request', async (
   expect(renderMock).toHaveBeenCalledWith('user/views/view.njk', { user: {} });
 });
 
-test('View tira un error si no hay id en el request', async () => {
+test('View agarra el error del servicio y los pasa a next', async () => {
   const reqMockWithoutUserId = {
     params: {},
   };
   const nextMock = jest.fn();
-  await controllerMock.view(reqMockWithoutUserId, {}, nextMock);
+  const renderMock = jest.fn();
+  const error = new Error('test');
+  serviceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+
+  await controllerMock.view(reqMockWithoutUserId, { render: renderMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
 
 test('Edit renderea form.njk y llama al servicio con la id del request', async () => {
@@ -85,8 +91,14 @@ test('Edit tira un error si no hay id en el requret', async () => {
     params: {},
   };
   const nextMock = jest.fn();
-  await controllerMock.edit(reqMockWithoutUserId, {}, nextMock);
+  const renderMock = jest.fn();
+  const error = new Error('test');
+  serviceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+
+  await controllerMock.edit(reqMockWithoutUserId, { render: renderMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
 
 test('Save llama al servicio con el body y redirecciona a /users', async () => {
@@ -120,10 +132,11 @@ test('Save llama al servicio con el body y redirecciona a /users', async () => {
 test('Save tira error si no se pasa data en el body', async () => {
   const nextMock = jest.fn();
   const bodyMock = {};
+  const renderMock = jest.fn();
 
   await controllerMock.save(
     { body: bodyMock },
-    {},
+    { render: renderMock },
     nextMock,
   );
 
@@ -152,11 +165,17 @@ test('Delete pasa el auto al servicio y redirecciona a /users', async () => {
   expect(redirectMock).toHaveBeenCalledWith('/users');
 });
 
-test('Delete tira error cuando no hay id en el request', async () => {
+test('Delete agarra el error del servicio y lo pasa a next', async () => {
   const reqMockWithoutUserId = {
     params: {},
   };
   const nextMock = jest.fn();
-  await controllerMock.delete(reqMockWithoutUserId, {}, nextMock);
+  const renderMock = jest.fn();
+  const error = new Error('test');
+  serviceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+
+  await controllerMock.delete(reqMockWithoutUserId, { render: renderMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
