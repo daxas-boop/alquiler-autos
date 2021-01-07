@@ -40,7 +40,7 @@ module.exports = class RentService {
     }
 
     rent.pricePerDay = rent.Car.priceDay;
-    rent.calculateTotalPrice(rent.Car.priceDay);
+    rent.totalPrice = rent.calculateTotalPrice(rent.Car.priceDay);
 
     return this.RentRepository.save(rent);
   }
