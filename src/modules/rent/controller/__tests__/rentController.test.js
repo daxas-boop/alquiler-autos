@@ -117,13 +117,19 @@ test('View renderea view.njk y llama al servicio de renta con el id del request'
   expect(rentServiceMock.getById).toHaveBeenCalledWith(reqMock.params.id);
 });
 
-test('View da un error cuando no hay una id en el request', async () => {
+test('View agarra el error del servicio y lo pasa a next', async () => {
   const nextMock = jest.fn();
   const reqMockWithoutRentId = {
     params: {},
   };
-  await controllerMock.view(reqMockWithoutRentId, {}, nextMock);
+  const renderMock = jest.fn();
+  const error = new Error('test');
+  rentServiceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+
+  await controllerMock.view(reqMockWithoutRentId, { render: renderMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
 
 test('Edit renderea form.njk, llama al servicio de renta con el id del request', async () => {
@@ -146,13 +152,19 @@ test('Edit renderea form.njk, llama al servicio de renta con el id del request',
   expect(rentServiceMock.getById).toHaveBeenCalledWith(reqMock.params.id);
 });
 
-test('Edit da un error cuando no hay una id en el request', async () => {
+test('Edit agarra el error del servicio y lo pasa a next', async () => {
   const nextMock = jest.fn();
   const reqMockWithoutRentId = {
     params: {},
   };
-  await controllerMock.edit(reqMockWithoutRentId, {}, nextMock);
+  const renderMock = jest.fn();
+  const error = new Error('test');
+  rentServiceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+
+  await controllerMock.edit(reqMockWithoutRentId, { render: renderMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
 
 test('Save llama al servicio de renta con el body y redirecciona a /rents', async () => {
@@ -194,11 +206,17 @@ test('Save llama al servicio de renta con el body y redirecciona a /rents', asyn
   expect(redirectMock).toHaveBeenCalledWith('/rents');
 });
 
-test('Save da un error cuando pasa un body vacio', async () => {
+test('Save agarra errores del servicio y los pasa a next', async () => {
   const nextMock = jest.fn();
   const bodyMock = {};
-  await controllerMock.save({ body: bodyMock, session: {} }, {}, nextMock);
+  const redirectMock = jest.fn();
+  const error = new Error('Save error');
+  rentServiceMock.save.mockImplementationOnce(() => Promise.reject(error));
+
+  await controllerMock.save({ body: bodyMock, session: {} }, { redirect: redirectMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
 
 test('Delete llama al servicio de renta con el id del request y redirecciona a /rents', async () => {
@@ -217,12 +235,18 @@ test('Delete llama al servicio de renta con el id del request y redirecciona a /
   expect(redirectMock).toHaveBeenCalledWith('/rents');
 });
 
-test('Delete da un error cuando no pasamos un id en el request', async () => {
+test('Delete agarra el error del servicio y lo pasa a next', async () => {
   const reqMockWithoutRentId = {
     params: {},
     session: {},
   };
   const nextMock = jest.fn();
-  await controllerMock.delete(reqMockWithoutRentId, {}, nextMock);
+  const renderMock = jest.fn();
+  const error = new Error('test');
+  rentServiceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+
+  await controllerMock.delete(reqMockWithoutRentId, { render: renderMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
