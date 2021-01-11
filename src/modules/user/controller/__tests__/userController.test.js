@@ -101,30 +101,59 @@ test('Edit tira un error si no hay id en el requret', async () => {
   expect(nextMock).toHaveBeenCalledWith(error);
 });
 
-test('Save llama al servicio con el body y redirecciona a /users', async () => {
+test('Save llama al servicio con el body, da un mensaje y redirecciona a /users', async () => {
   const redirectMock = jest.fn();
   const nextMock = jest.fn();
   const bodyMock = new User({
     id: 1,
-    name: undefined,
-    surname: undefined,
-    documentType: undefined,
-    documentNumber: undefined,
-    nationality: undefined,
-    address: undefined,
-    phone: undefined,
-    email: undefined,
-    birthdate: undefined,
+    name: 'Pepe',
   });
+  const reqMock = {
+    body: bodyMock,
+    session: {},
+  };
 
   await controllerMock.save(
-    { body: bodyMock, session: {} },
+    reqMock,
     { redirect: redirectMock },
     nextMock,
   );
 
   expect(serviceMock.save).toHaveBeenCalledTimes(1);
   expect(serviceMock.save).toHaveBeenCalledWith(bodyMock);
+  expect(reqMock.session.messages).toEqual(['El usuario con ID 1 y nombre Pepe se actualizó']);
+  expect(redirectMock).toHaveBeenCalledTimes(1);
+  expect(redirectMock).toHaveBeenCalledWith('/users');
+});
+
+test('Save da un mensaje diferente si la entidad no tiene id', async () => {
+  const redirectMock = jest.fn();
+  const nextMock = jest.fn();
+
+  const bodyMock = new User({
+    id: 1,
+    name: 'Pepe',
+  });
+
+  const bodyMockWithoutId = new User({
+    name: 'Pepe',
+  });
+
+  const reqMock = {
+    body: bodyMockWithoutId,
+    session: {},
+  };
+
+  serviceMock.save.mockImplementationOnce(() => Promise.resolve(bodyMock));
+  await controllerMock.save(
+    reqMock,
+    { redirect: redirectMock },
+    nextMock,
+  );
+
+  expect(serviceMock.save).toHaveBeenCalledTimes(1);
+  expect(serviceMock.save).toHaveBeenCalledWith(bodyMockWithoutId);
+  expect(reqMock.session.messages).toEqual(['Se creó un usuario con ID 1 y nombre Pepe']);
   expect(redirectMock).toHaveBeenCalledTimes(1);
   expect(redirectMock).toHaveBeenCalledWith('/users');
 });

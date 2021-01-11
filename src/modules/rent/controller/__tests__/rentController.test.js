@@ -1,4 +1,5 @@
 const Rent = require('../../entity/rent');
+const User = require('../../../user/entity/user');
 const RentController = require('../rentController');
 const RentError = require('../error/rentError');
 
@@ -167,52 +168,67 @@ test('Edit agarra el error del servicio y lo pasa a next', async () => {
   expect(nextMock).toHaveBeenCalledWith(error);
 });
 
-test('Save llama al servicio de renta con el body y redirecciona a /rents', async () => {
-  const bodyMock = new Rent({
-    id: 1,
-    carId: undefined,
-    userId: undefined,
-    pricePerDay: undefined,
-    startDate: undefined,
-    finishDate: undefined,
-    totalPrice: undefined,
-    paymentMethod: undefined,
-    isPaid: undefined,
-    Car: {},
-    User: {
-      address: undefined,
-      birthdate: undefined,
-      documentNumber: undefined,
-      documentType: undefined,
-      email: undefined,
-      id: NaN,
-      name: undefined,
-      nationality: undefined,
-      phone: undefined,
-      surname: undefined,
-    },
-  });
+test('Save llama al servicio de renta con el body da un mensaje y redirecciona a /rents', async () => {
   const redirectMock = jest.fn();
+  const rentMock = new Rent({
+    id: 1,
+    Car: {},
+    User: {},
+  });
+  const reqMock = {
+    body: rentMock,
+    session: {},
+  };
 
   await controllerMock.save(
-    { body: bodyMock, session: {} },
+    reqMock,
     { redirect: redirectMock },
     {},
   );
 
   expect(rentServiceMock.save).toHaveBeenCalledTimes(1);
-  expect(rentServiceMock.save).toHaveBeenCalledWith(bodyMock);
+  expect(rentServiceMock.save).toHaveBeenCalledWith(rentMock);
+  expect(reqMock.session.messages).toEqual(['Se actualizó el alquiler con id:1']);
   expect(redirectMock).toHaveBeenCalledTimes(1);
   expect(redirectMock).toHaveBeenCalledWith('/rents');
 });
 
-test('Save agarra errores del servicio y los pasa a next', async () => {
+test('Save da un mensaje distinto si la entidad no tiene id', async () => {
+  const rentMockWithoutId = new Rent({
+    Car: {},
+    User: {},
+  });
+  const rentMock = new Rent({
+    id: 1,
+    Car: {},
+    User: {},
+  });
+  const redirectMock = jest.fn();
+  const reqMock = {
+    body: rentMockWithoutId,
+    session: {},
+  };
+  rentServiceMock.save.mockImplementationOnce(() => Promise.resolve(rentMock));
+
+  await controllerMock.save(
+    reqMock,
+    { redirect: redirectMock },
+    {},
+  );
+
+  expect(rentServiceMock.save).toHaveBeenCalledTimes(1);
+  expect(rentServiceMock.save).toHaveBeenCalledWith(rentMockWithoutId);
+  expect(reqMock.session.messages).toEqual(['Se creó un nuevo alquiler con id:1']);
+  expect(redirectMock).toHaveBeenCalledTimes(1);
+  expect(redirectMock).toHaveBeenCalledWith('/rents');
+});
+
+test('Save captura errores del servicio y los pasa a next', async () => {
   const nextMock = jest.fn();
   const bodyMock = {};
   const redirectMock = jest.fn();
-  const error = new Error('Save error');
+  const error = new Error('Service error');
   rentServiceMock.save.mockImplementationOnce(() => Promise.reject(error));
-
   await controllerMock.save({ body: bodyMock, session: {} }, { redirect: redirectMock }, nextMock);
 
   expect(nextMock).toHaveBeenCalledTimes(1);
