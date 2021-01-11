@@ -21,9 +21,10 @@ module.exports = class Rent {
     this.User = User;
   }
 
-  calculateTotalPrice(carEntity) {
+  calculateTotalPrice(pricePerDay) {
     const milisecondDiff = new Date(this.finishDate).getTime() - new Date(this.startDate).getTime();
     const dayDiff = Math.round(milisecondDiff / (1000 * 3600 * 24));
-    this.totalPrice = dayDiff * carEntity.priceDay;
+
+    return dayDiff * pricePerDay;
   }
 };

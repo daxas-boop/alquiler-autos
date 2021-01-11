@@ -69,13 +69,18 @@ test('View renderea view.njk y llama al servicio con la id del request', async (
   );
 });
 
-test('View tira error cuando no hay un id en el request', async () => {
+test('View agarra el error del servicio y lo pasa a next', async () => {
   const reqMockWithoutCarId = {
     params: {},
   };
+  const renderMock = jest.fn();
   const nextMock = jest.fn();
-  await controller.view(reqMockWithoutCarId, {}, nextMock);
+  const error = new Error('test');
+  serviceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+  await controller.view(reqMockWithoutCarId, { render: renderMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
 
 test('Edit renderea form.njk y llama al servicio con la id del request', async () => {
@@ -96,13 +101,19 @@ test('Edit renderea form.njk y llama al servicio con la id del request', async (
   );
 });
 
-test('Edit tira error cuando no hay un id en el request', async () => {
+test('Edit agarra el error del servicio y lo pasa a next', async () => {
   const reqMockWithoutCarId = {
     params: {},
   };
   const nextMock = jest.fn();
-  await controller.edit(reqMockWithoutCarId, {}, nextMock);
+  const renderMock = jest.fn();
+  const error = new Error('test');
+  serviceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+
+  await controller.edit(reqMockWithoutCarId, { render: renderMock }, nextMock);
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });
 
 test('Delete pasa el auto al servicio y redirecciona a /cars', async () => {
@@ -124,56 +135,97 @@ test('Delete pasa el auto al servicio y redirecciona a /cars', async () => {
   expect(redirectMock).toHaveBeenCalledWith('/cars');
 });
 
-test('Delete tira error cuando no hay un id en el request', async () => {
+test('Delete agarra el error del servicio y los pasa a next', async () => {
   const reqMockWithoutCarId = {
     params: {},
   };
+  const renderMock = jest.fn();
   const nextMock = jest.fn();
-  await controller.delete(reqMockWithoutCarId, {}, nextMock);
+  const error = new Error('test');
+  serviceMock.getById.mockImplementationOnce(() => Promise.reject(error));
+
+  await controller.delete(reqMockWithoutCarId, { render: renderMock }, nextMock);
+
+  expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
   expect(nextMock).toHaveBeenCalledTimes(1);
 });
 
-test('Save llama al servicio con el body y redirecciona a /cars', async () => {
+test('Save llama al servicio con el body, da un mensaje y redirecciona a /cars', async () => {
   const redirectMock = jest.fn();
   const nextMock = jest.fn();
   const FAKE_CREST_URL = 'test/url.png';
   const bodyMock = new Car({
     id: 1,
-    brand: undefined,
-    model: undefined,
-    year: undefined,
-    mileage: undefined,
-    color: undefined,
-    airConditioning: undefined,
-    passengers: undefined,
-    transmission: undefined,
-    priceDay: undefined,
+    brand: 'Renault',
     image: 'test/url.png',
   });
+  const reqMock = {
+    body: bodyMock,
+    file: { path: FAKE_CREST_URL },
+    session: {},
+  };
 
   await controller.save(
-    { body: bodyMock, file: { path: FAKE_CREST_URL }, session: {} },
+    reqMock,
     { redirect: redirectMock },
     nextMock,
   );
 
   expect(serviceMock.save).toHaveBeenCalledTimes(1);
   expect(serviceMock.save).toHaveBeenCalledWith(bodyMock);
+  expect(reqMock.session.messages).toEqual(['El auto con ID 1 y marca Renault se actualizó']);
   expect(redirectMock).toHaveBeenCalledTimes(1);
   expect(redirectMock).toHaveBeenCalledWith('/cars');
 });
 
-test('Save da error caundo se pasa un body vacio', async () => {
+test('Save da un mensaje distinto si la entidad no tiene id', async () => {
+  const redirectMock = jest.fn();
   const nextMock = jest.fn();
-  const bodyMock = {};
+  const FAKE_CREST_URL = 'test/url.png';
 
+  const bodyMock = new Car({
+    id: 1,
+    brand: 'Renault',
+    image: 'test/url.png',
+  });
+
+  const bodyMockWithoutId = new Car({
+    image: 'test/url.png',
+  });
+
+  const reqMock = {
+    body: bodyMockWithoutId,
+    file: { path: FAKE_CREST_URL },
+    session: {},
+  };
+
+  serviceMock.save.mockImplementationOnce(() => Promise.resolve(bodyMock));
   await controller.save(
-    { body: bodyMock, session: {} },
-    { },
+    reqMock,
+    { redirect: redirectMock },
     nextMock,
   );
 
   expect(serviceMock.save).toHaveBeenCalledTimes(1);
-  expect(serviceMock.save).toHaveBeenCalledWith(bodyMock);
+  expect(serviceMock.save).toHaveBeenCalledWith(bodyMockWithoutId);
+  expect(reqMock.session.messages).toEqual(['Se creó un auto con ID 1 y marca Renault']);
+  expect(redirectMock).toHaveBeenCalledTimes(1);
+  expect(redirectMock).toHaveBeenCalledWith('/cars');
+});
+
+test('Save captura errores del servicio y los pasa a next', async () => {
+  const nextMock = jest.fn();
+  const bodyMock = {};
+  const redirectMock = jest.fn();
+  const error = new Error('Service error');
+  serviceMock.save.mockImplementationOnce(() => Promise.reject(error));
+  await controller.save(
+    { body: bodyMock, session: {} },
+    { redirect: redirectMock },
+    nextMock,
+  );
+
   expect(nextMock).toHaveBeenCalledTimes(1);
+  expect(nextMock).toHaveBeenCalledWith(error);
 });

@@ -21,8 +21,8 @@ function fromDataToEntity({
     totalPrice,
     paymentMethod,
     isPaid,
-    Car: new Car({ id: Number(carId) }),
-    User: new User({ id: Number(userId) }),
+    Car: new Car({ id: carId }),
+    User: new User({ id: userId }),
   });
 }
 
