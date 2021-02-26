@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node src/app.js",
     "schema:sync": "node src/cli/init.db.js",
     "dev": "npm run schema:sync && nodemon -e njk,js --ignore 'data/*' src/app.js ",
-    "start": "node src/app.js",
     "test": "jest --coverage",
     "test:dev": "jest --watch"
   },
